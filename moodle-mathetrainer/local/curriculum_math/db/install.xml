@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/curriculum_math/db" VERSION="2026043001" COMMENT="XMLDB file for local_curriculum_math"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="curriculum_source" COMMENT="Source metadata for curriculum imports">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sourcekey" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="sourceurl" TYPE="char" LENGTH="255" NOTNULL="false"/>
+        <FIELD NAME="licensetag" TYPE="char" LENGTH="50" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="sourcekey_uix" UNIQUE="true" FIELDS="sourcekey"/></INDEXES>
+    </TABLE>
+
+    <TABLE NAME="curriculum_framework" COMMENT="Framework header and version">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sourceid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="frameworkid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="country" TYPE="char" LENGTH="2" NOTNULL="true" DEFAULT="DE"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="ALL"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="stage" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="versiontag" TYPE="char" LENGTH="30" NOTNULL="true"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="framework_source_fk" TYPE="foreign" FIELDS="sourceid" REFTABLE="curriculum_source" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="framework_unique_uix" UNIQUE="true" FIELDS="frameworkid,versiontag"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="curriculum_node" COMMENT="Hierarchical curriculum nodes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="frameworkfk" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="nodeid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="nodetype" TYPE="char" LENGTH="30" NOTNULL="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="node_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="curriculum_framework" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="node_unique_uix" UNIQUE="true" FIELDS="frameworkfk,nodeid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="curriculum_competency" COMMENT="Competency definitions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="frameworkfk" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="competencyid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="teacherlabel" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="studentlabel" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="gradefrom" TYPE="int" LENGTH="2" NOTNULL="false"/>
+        <FIELD NAME="gradeto" TYPE="int" LENGTH="2" NOTNULL="false"/>
+        <FIELD NAME="topic" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="leitidee" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="processjson" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="requirementjson" TYPE="text" NOTNULL="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="comp_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="curriculum_framework" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="comp_unique_uix" UNIQUE="true" FIELDS="frameworkfk,competencyid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="curriculum_mapping" COMMENT="Mapping across frameworks">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="fromframework" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="fromcompetency" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="toframework" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="tocompetency" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="relationtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="maps_to"/>
+        <FIELD NAME="confidence" TYPE="number" LENGTH="4" DECIMALS="2" NOTNULL="true" DEFAULT="1.00"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES>
+        <INDEX NAME="mapping_from_ix" UNIQUE="false" FIELDS="fromframework,fromcompetency"/>
+        <INDEX NAME="mapping_to_ix" UNIQUE="false" FIELDS="toframework,tocompetency"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="exercise_template" COMMENT="Exercise templates">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="templateid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="topic" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="gradefrom" TYPE="int" LENGTH="2" NOTNULL="false"/>
+        <FIELD NAME="gradeto" TYPE="int" LENGTH="2" NOTNULL="false"/>
+        <FIELD NAME="generatorclass" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="validatorclass" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="templateid_uix" UNIQUE="true" FIELDS="templateid"/></INDEXES>
+    </TABLE>
+
+    <TABLE NAME="exercise_competency_link" COMMENT="Template to competency relation">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="templateid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="link_template_fk" TYPE="foreign" FIELDS="templateid" REFTABLE="exercise_template" REFFIELDS="id"/>
+        <KEY NAME="link_comp_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="curriculum_competency" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES><INDEX NAME="link_unique_uix" UNIQUE="true" FIELDS="templateid,competencyid"/></INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
