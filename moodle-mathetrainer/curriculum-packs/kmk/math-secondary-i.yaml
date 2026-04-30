@@ -1,0 +1,19 @@
+framework:
+  id: "KMK-MATH-SI"
+  country: "DE"
+  state: "ALL"
+  subject: "Mathematik"
+  stage: "Sekundarstufe I"
+  version: "draft-0.1"
+
+competencies:
+  - id: "KMK-SI-RAT-01"
+    title: "Rationale Zahlen nutzen"
+    topic: "Rationale Zahlen"
+    grade_from: 7
+    grade_to: 7
+    leitidee: "Zahl und Operation"
+    process:
+      - "Mit mathematischen Objekten umgehen"
+      - "Mathematisch kommunizieren"
+    requirement_levels: ["AFB I", "AFB II"]

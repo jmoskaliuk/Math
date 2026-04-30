@@ -1,0 +1,24 @@
+framework:
+  id: "KMK-MATH-PRIMARY"
+  country: "DE"
+  state: "ALL"
+  subject: "Mathematik"
+  stage: "Primarstufe"
+  version: "draft-0.1"
+
+meta:
+  process_competencies:
+    - "Mathematisch argumentieren"
+    - "Mathematisch kommunizieren"
+    - "Probleme mathematisch lösen"
+    - "Mathematisch modellieren"
+    - "Mathematisch darstellen"
+    - "Mit mathematischen Objekten umgehen"
+    - "Mit Medien mathematisch arbeiten"
+  leitideen:
+    - "Zahl und Operation"
+    - "Größen und Messen"
+    - "Strukturen und funktionaler Zusammenhang"
+    - "Raum und Form"
+    - "Daten und Zufall"
+  requirement_levels: ["AFB I", "AFB II", "AFB III"]

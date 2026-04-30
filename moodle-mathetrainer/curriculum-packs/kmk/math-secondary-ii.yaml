@@ -1,0 +1,9 @@
+framework:
+  id: "KMK-MATH-SII"
+  country: "DE"
+  state: "ALL"
+  subject: "Mathematik"
+  stage: "Sekundarstufe II"
+  version: "draft-0.1"
+
+note: "Platzhalter für spätere Ausbaustufe"

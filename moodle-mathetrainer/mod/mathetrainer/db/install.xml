@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/mathetrainer/db" VERSION="2026043001" COMMENT="XMLDB file for mod_mathetrainer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="mathetrainer" COMMENT="Main activity table">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="NRW"/>
+        <FIELD NAME="schoolform" TYPE="char" LENGTH="50" NOTNULL="false"/>
+        <FIELD NAME="gradelevel" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="5"/>
+        <FIELD NAME="topic" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="competencyid" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="requirementlevel" TYPE="char" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course_ix" UNIQUE="false" FIELDS="course"/>
+        <INDEX NAME="state_grade_ix" UNIQUE="false" FIELDS="state,gradelevel"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="mathetrainer_attempts" COMMENT="Learner attempts per activity">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="mathetrainerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="attemptno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="inprogress"/>
+        <FIELD NAME="score" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="mathetrainer_fk" TYPE="foreign" FIELDS="mathetrainerid" REFTABLE="mathetrainer" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="mt_user_ix" UNIQUE="false" FIELDS="mathetrainerid,userid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="mathetrainer_items" COMMENT="Generated exercise items">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="slot" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="templateid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="seed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="payloadjson" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="expectedjson" TYPE="text" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="attempt_fk" TYPE="foreign" FIELDS="attemptid" REFTABLE="mathetrainer_attempts" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="attempt_slot_uix" UNIQUE="true" FIELDS="attemptid,slot"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="mathetrainer_responses" COMMENT="Responses for generated items">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="responsejson" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="iscorrect" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="feedback" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timesubmitted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="item_fk" TYPE="foreign" FIELDS="itemid" REFTABLE="mathetrainer_items" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="mathetrainer_mastery" COMMENT="Mastery snapshots by competency">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="mathetrainerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="competencyid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="mastery" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="attemptcount" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="mastery_mt_fk" TYPE="foreign" FIELDS="mathetrainerid" REFTABLE="mathetrainer" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="mastery_lookup_uix" UNIQUE="true" FIELDS="mathetrainerid,userid,competencyid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="mathetrainer_generation_log" COMMENT="Generation audit log">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="mathetrainerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="templateid" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="seed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="ok"/>
+        <FIELD NAME="message" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="log_mt_fk" TYPE="foreign" FIELDS="mathetrainerid" REFTABLE="mathetrainer" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="log_mt_time_ix" UNIQUE="false" FIELDS="mathetrainerid,timecreated"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

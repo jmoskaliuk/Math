@@ -1,0 +1,27 @@
+framework:
+  id: "BW-MATH-SI"
+  country: "DE"
+  state: "BW"
+  subject: "Mathematik"
+  stage: "Sekundarstufe I"
+  version: "draft-0.1"
+
+competencies:
+  - id: "BW-MATH-06-BRUECHE"
+    title: "Brüche darstellen und vergleichen"
+    teacher_label: "Brüche am Zahlenstrahl verorten und vergleichen"
+    student_label: "Ich kann Brüche einordnen, vergleichen und darstellen."
+    grade_from: 6
+    grade_to: 6
+    topic: "Brüche"
+    kmk:
+      leitidee: "Zahl und Operation"
+      process:
+        - "Mathematisch darstellen"
+        - "Mit mathematischen Objekten umgehen"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "fraction_numberline"
+      - "fraction_compare"
