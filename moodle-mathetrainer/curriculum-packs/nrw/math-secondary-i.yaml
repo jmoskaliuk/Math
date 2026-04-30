@@ -1,0 +1,28 @@
+framework:
+  id: "NRW-MATH-SI"
+  country: "DE"
+  state: "NRW"
+  subject: "Mathematik"
+  stage: "Sekundarstufe I"
+  version: "draft-0.1"
+
+competencies:
+  - id: "NRW-MATH-07-RATIONAL-ZAHLEN"
+    title: "Rationale Zahlen verstehen und anwenden"
+    teacher_label: "Rationale Zahlen darstellen, ordnen und mit ihnen rechnen"
+    student_label: "Ich kann positive und negative Zahlen darstellen, ordnen und berechnen."
+    grade_from: 7
+    grade_to: 7
+    topic: "Rationale Zahlen"
+    kmk:
+      leitidee: "Zahl und Operation"
+      process:
+        - "Mit mathematischen Objekten umgehen"
+        - "Mathematisch kommunizieren"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "integer_numberline"
+      - "rational_addition"
+      - "sign_error_analysis"
