@@ -33,13 +33,35 @@ Siehe Architektur-Dokumentation unter `docs/architecture.md`.
 
 ## Status
 
-Diese Version ist ein **Skeleton/Bootstrap** für die weitere Entwicklung:
+Version 0.2.0 (Alpha). Die Aktivität ist in Moodle anlegbar und für Lernende nutzbar:
 
-- Grundstruktur vorhanden
-- Datenmodell-Entwürfe angelegt
-- Beispielhafte Curriculum-Packs als YAML
-- Keine produktive KI-Anbindung
-- Kein Vollimport offizieller Lehrpläne
+- Lehrkraft legt Bundesland, Klasse, Thema, AFB und optional eine Kompetenz-ID fest
+- Lernende bekommen pro Durchgang 5 generierte Aufgaben und sofort Rückmeldung
+- Fehlerdiagnose statt nur „falsch“ (z. B. Vorzeichenfehler, Nenner addiert, „größerer Nenner = größerer Bruch“)
+- Lehrkräfte sehen Durchgänge, Durchschnitt pro Person und häufige Fehler
+- Lernstand je Kompetenz (`mathetrainer_mastery`), Privacy API, Kurs-Reset
+
+Aufgabentypen (deterministisch, gleicher Seed = gleiche Aufgabe):
+
+| Template | Thema | Klasse | Inhalt |
+|---|---|---|---|
+| `rational_addition` | Rationale Zahlen | 7–8 | Addition/Subtraktion mit negativen ganzen Zahlen und Brüchen |
+| `fraction_compare` | Brüche | 6–7 | Brüche vergleichen (<, =, >), inkl. gleichwertiger Brüche |
+
+Noch offen:
+
+- Weitere Generatoren aus den Packs (`integer_numberline`, `fraction_numberline`, `sign_error_analysis`, Gleichungen)
+- Aufgabenauswahl über `local_curriculum_math` statt über die Registry im Modul
+- Backup/Restore, Bewertung im Gradebook
+- Keine produktive KI-Anbindung, kein Vollimport offizieller Lehrpläne
+
+## Tests
+
+PHPUnit-Tests liegen unter `mod/mathetrainer/tests/` (Moodle-Standard):
+
+```
+vendor/bin/phpunit --testsuite mod_mathetrainer_testsuite
+```
 
 ## Entwicklung
 
