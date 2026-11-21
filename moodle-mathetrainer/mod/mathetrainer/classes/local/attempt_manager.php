@@ -86,10 +86,7 @@ final class attempt_manager {
         ];
         $attempt->id = $this->db->insert_record('mathetrainer_attempts', $attempt);
 
-        $templates = registry::find(
-            $this->instance->topic ?? null,
-            isset($this->instance->gradelevel) ? (int)$this->instance->gradelevel : null
-        );
+        $templates = $this->select_templates();
         $generator = new task_generator();
 
         for ($slot = 1; $slot <= self::ITEMS_PER_ATTEMPT; $slot++) {
@@ -118,6 +115,37 @@ final class attempt_manager {
 
         $transaction->allow_commit();
         return $attempt;
+    }
+
+    /**
+     * Template ids for this activity: from the curriculum competency if one is
+     * configured and linked to exercises, otherwise from topic/grade/AFB.
+     *
+     * @return string[]
+     */
+    public function select_templates(): array {
+        return registry::find(
+            $this->instance->topic ?? null,
+            isset($this->instance->gradelevel) ? (int)$this->instance->gradelevel : null,
+            $this->instance->requirementlevel ?? null,
+            $this->curriculum_templates()
+        );
+    }
+
+    /**
+     * Template ids linked to the configured competency in local_curriculum_math,
+     * or null if no competency is set or the curriculum plugin is not installed.
+     *
+     * @return string[]|null
+     */
+    private function curriculum_templates(): ?array {
+        $competencyid = (string)($this->instance->competencyid ?? '');
+        if ($competencyid === '' || !class_exists(\local_curriculum_math\mapper\competency_query_service::class)) {
+            return null;
+        }
+        $ids = (new \local_curriculum_math\mapper\competency_query_service($this->db))
+            ->template_ids_for_competency($competencyid);
+        return $ids ?: null;
     }
 
     /**

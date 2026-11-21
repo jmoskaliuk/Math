@@ -72,12 +72,50 @@ final class import_service {
                 if (!empty($comp->id)) {
                     $DB->update_record('curriculum_competency', $comp);
                 } else {
-                    $DB->insert_record('curriculum_competency', $comp);
+                    $comp->id = $DB->insert_record('curriculum_competency', $comp);
                 }
+
+                $generators = is_array($competency['exercise_generators'] ?? null) ? $competency['exercise_generators'] : [];
+                $this->link_templates((int)$comp->id, $comp, $generators);
             }
         }
 
         $transaction->allow_commit();
         return $frameworkfk;
+    }
+
+    /**
+     * Registers the exercise templates named in a pack and links them to the competency.
+     * Generator classes live in the activity plugin; only the template ids are stored here.
+     *
+     * @param string[] $templateids
+     */
+    private function link_templates(int $competencyfk, stdClass $competency, array $templateids): void {
+        global $DB;
+
+        foreach ($templateids as $templateid) {
+            $templateid = trim((string)$templateid);
+            if ($templateid === '' || !preg_match('/^[a-z0-9_]+$/', $templateid)) {
+                continue;
+            }
+            $template = $DB->get_record('exercise_template', ['templateid' => $templateid]);
+            if (!$template) {
+                $template = (object)[
+                    'templateid' => $templateid,
+                    'name' => $templateid,
+                    'topic' => $competency->topic,
+                    'gradefrom' => $competency->gradefrom,
+                    'gradeto' => $competency->gradeto,
+                    'generatorclass' => '',
+                    'validatorclass' => '',
+                    'active' => 1,
+                ];
+                $template->id = $DB->insert_record('exercise_template', $template);
+            }
+            $link = ['templateid' => (int)$template->id, 'competencyid' => $competencyfk];
+            if (!$DB->record_exists('exercise_competency_link', $link)) {
+                $DB->insert_record('exercise_competency_link', (object)$link);
+            }
+        }
     }
 }

@@ -15,6 +15,10 @@ use mod_mathetrainer\validator\answer_validator;
  * @covers     \mod_mathetrainer\generator\rational_addition
  * @covers     \mod_mathetrainer\generator\fraction_compare
  * @covers     \mod_mathetrainer\generator\registry
+ * @covers     \mod_mathetrainer\generator\integer_numberline
+ * @covers     \mod_mathetrainer\generator\fraction_numberline
+ * @covers     \mod_mathetrainer\generator\linear_equation
+ * @covers     \mod_mathetrainer\generator\sign_error_analysis
  * @license    MIT
  */
 final class generator_test extends \basic_testcase {
@@ -36,7 +40,7 @@ final class generator_test extends \basic_testcase {
         foreach (registry::templateids() as $templateid) {
             $expressions = [];
             for ($seed = 1; $seed <= 50; $seed++) {
-                $expressions[] = $generator->generate($templateid, $seed)['payload']['expression'];
+                $expressions[] = json_encode($generator->generate($templateid, $seed)['payload']);
             }
             $this->assertGreaterThan(20, count(array_unique($expressions)), $templateid);
         }
@@ -81,12 +85,88 @@ final class generator_test extends \basic_testcase {
     }
 
     public function test_registry_find(): void {
-        $this->assertSame(['rational_addition'], registry::find('Rationale Zahlen', 7));
-        $this->assertSame(['fraction_compare'], registry::find('Brüche', 6));
+        $this->assertSame(['fraction_compare'], registry::find('Brüche', 7));
+        $this->assertSame(['fraction_numberline', 'fraction_compare'], registry::find('Brüche', 6));
+        $this->assertSame(['integer_numberline', 'rational_addition', 'sign_error_analysis'],
+            registry::find('Rationale Zahlen', 7));
+        // Requirement level narrows the selection.
+        $this->assertSame(['sign_error_analysis'], registry::find('Rationale Zahlen', 7, 'AFB III'));
+        $this->assertSame(['integer_numberline', 'rational_addition'], registry::find('Rationale Zahlen', 7, 'AFB I'));
+        // Level without a match: ignored rather than leaving the activity empty.
+        $this->assertSame(['fraction_numberline'], registry::find('Brüche', 5, 'AFB III'));
         // No template for grade 2 in this topic: fall back to the topic.
-        $this->assertSame(['fraction_compare'], registry::find('Brüche', 2));
+        $this->assertSame(['fraction_numberline', 'fraction_compare'], registry::find('Brüche', 2));
         // Unknown topic: fall back to everything.
         $this->assertSame(registry::templateids(), registry::find('Geometrie', 5));
+    }
+
+    public function test_registry_find_with_curriculum_templates(): void {
+        // Templates from the curriculum override topic and grade, unknown ids are ignored.
+        $this->assertSame(['fraction_numberline', 'fraction_compare'],
+            registry::find('Rationale Zahlen', 9, null, ['fraction_compare', 'fraction_numberline', 'unknown']));
+        // Only unknown ids: fall back to the normal selection.
+        $this->assertSame(['linear_equation'], registry::find('Gleichungen', 7, null, ['unknown']));
+    }
+
+    public function test_integer_numberline(): void {
+        $generator = new task_generator();
+        $negatives = 0;
+        for ($seed = 1; $seed <= 300; $seed++) {
+            $exercise = $generator->generate('integer_numberline', $seed);
+            $line = $exercise['payload']['numberline'];
+            $labels = $line['labels'];
+            $this->assertCount(2, $labels);
+            $zero = array_search('0', $labels, true);
+            $this->assertIsInt($zero);
+            $other = array_key_first(array_diff_key($labels, [$zero => true]));
+            $step = intdiv((int)str_replace("\u{2212}", '-', $labels[$other]), $other - $zero);
+            $this->assertGreaterThan(0, $step);
+            $this->assertNotSame($zero, $line['marked']);
+            $this->assertSame((string)(($line['marked'] - $zero) * $step), $exercise['expected']['answer']);
+            $negatives += (int)$exercise['expected']['answer'] < 0 ? 1 : 0;
+        }
+        $this->assertGreaterThan(150, $negatives, 'Mostly negative numbers are asked.');
+    }
+
+    public function test_fraction_numberline(): void {
+        $generator = new task_generator();
+        for ($seed = 1; $seed <= 300; $seed++) {
+            $exercise = $generator->generate('fraction_numberline', $seed);
+            $line = $exercise['payload']['numberline'];
+            $parts = array_search('1', $line['labels'], true);
+            $this->assertIsInt($parts);
+            $this->assertSame((string)new fraction($line['marked'], $parts), $exercise['expected']['answer']);
+            $this->assertFalse(fraction::parse($exercise['expected']['answer'])->is_integer());
+        }
+    }
+
+    public function test_linear_equation_solution_satisfies_equation(): void {
+        $generator = new task_generator();
+        for ($seed = 1; $seed <= 500; $seed++) {
+            $exercise = $generator->generate('linear_equation', $seed);
+            $expression = str_replace("\u{2212}", '-', $exercise['payload']['expression']);
+            $this->assertMatchesRegularExpression('/^(-?\d*)x ([+-]) (\d+) = (-?\d+)$/', $expression);
+            preg_match('/^(-?\d*)x ([+-]) (\d+) = (-?\d+)$/', $expression, $m);
+            $a = match ($m[1]) { '' => 1, '-' => -1, default => (int)$m[1] };
+            $b = $m[2] === '+' ? (int)$m[3] : -(int)$m[3];
+            $x = (int)$exercise['expected']['answer'];
+            $this->assertSame((int)$m[4], $a * $x + $b, "seed $seed: $expression");
+        }
+    }
+
+    public function test_sign_error_analysis_shows_wrong_result(): void {
+        $generator = new task_generator();
+        for ($seed = 1; $seed <= 300; $seed++) {
+            $exercise = $generator->generate('sign_error_analysis', $seed);
+            $expression = str_replace("\u{2212}", '-', $exercise['payload']['expression']);
+            $this->assertMatchesRegularExpression('/^(\S+) ([+-]) \(?([^()]+)\)? = (\S+)$/', $expression);
+            preg_match('/^(\S+) ([+-]) \(?([^()]+)\)? = (\S+)$/', $expression, $m);
+            $correct = $m[2] === '+' ? (int)$m[1] + (int)$m[3] : (int)$m[1] - (int)$m[3];
+            $this->assertSame((string)$correct, $exercise['expected']['answer'], "seed $seed: $expression");
+            $this->assertNotSame((string)$correct, $m[4], 'The shown result must be wrong.');
+            $this->assertTrue((int)$m[1] < 0 || (int)$m[3] < 0, "seed $seed: at least one negative operand");
+            $this->assertSame('copied_wrong_result', $exercise['expected']['diagnostics'][$m[4]]);
+        }
     }
 
     public function test_generated_answers_validate_as_correct(): void {

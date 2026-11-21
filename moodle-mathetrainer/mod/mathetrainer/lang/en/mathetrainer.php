@@ -35,8 +35,9 @@ $string['topic_help'] = 'Determines which exercise types are generated. If the t
 $string['alltopics'] = 'All topics';
 $string['requirementlevel'] = 'Requirement level';
 $string['any'] = 'Any';
+$string['nocompetency'] = 'None (select by topic and grade)';
 $string['competencyid'] = 'Competency ID';
-$string['competencyid_help'] = 'Optional: ID of the curriculum competency (e.g. NRW-MATH-07-RATIONAL-ZAHLEN). Mastery is tracked for this competency. If empty, the topic is used.';
+$string['competencyid_help'] = 'Optional: curriculum competency (e.g. NRW-MATH-07-RATIONAL-ZAHLEN). If the curriculum pack links exercise types to it, exactly those are used. Mastery is tracked for this competency. If empty, exercises are selected by topic, grade and requirement level.';
 
 // Learner view.
 $string['startintro'] = 'Each round gives you {$a} new exercises. After submitting you immediately see what was right and get hints on your mistakes.';
@@ -47,6 +48,11 @@ $string['attemptno'] = 'Round {$a}';
 $string['exerciseno'] = 'Exercise {$a}';
 $string['prompt_calculate'] = 'Calculate {$a}';
 $string['prompt_compare'] = 'Insert the correct sign (<, = or >): {$a}';
+$string['prompt_numberline'] = 'Which number is marked on the number line?';
+$string['prompt_fraction_numberline'] = 'Which fraction is marked on the number line?';
+$string['prompt_find_error'] = 'This calculation is wrong: {$a}. What is the correct result?';
+$string['prompt_equation'] = 'Solve the equation {$a}. Enter x.';
+$string['numberline_alt'] = 'Number line with a marked point';
 $string['numericinputhelp'] = 'Integer, fraction (e.g. -3/4) or decimal (e.g. 0.75)';
 $string['submitanswers'] = 'Submit answers';
 $string['resultheading'] = 'Result of round {$a}';
@@ -73,6 +79,13 @@ $string['error_numerator_only'] = 'With different denominators, comparing the nu
 $string['error_relation_reversed'] = 'The sign is exactly the wrong way round.';
 $string['error_not_equal'] = 'The fractions are not equal. Use a common denominator and compare.';
 $string['error_equivalent_fractions'] = 'The fractions are equal – one is an expanded form of the other.';
+$string['error_copied_wrong_result'] = 'That is exactly the wrong result from the exercise. Work it out yourself!';
+$string['error_scale_error'] = 'You counted the ticks. Check what distance one tick stands for on this number line.';
+$string['error_counted_marks'] = 'You counted the ticks instead of the parts. The denominator is the number of equal parts between 0 and 1.';
+$string['error_unit_error'] = 'You took the whole number line as one whole. The whole is the part from 0 to 1.';
+$string['error_inverse_operation'] = 'When rearranging, use the inverse operation: + becomes −, − becomes +.';
+$string['error_forgot_divide'] = 'Almost: you still have to divide by the number in front of x.';
+$string['error_multiplied_instead'] = 'The number in front of x is removed by dividing, not by multiplying.';
 
 // Teacher report.
 $string['reportheading'] = 'Report';
@@ -93,6 +106,13 @@ $string['errorname_numerator_only'] = 'Only numerators compared';
 $string['errorname_relation_reversed'] = 'Sign reversed';
 $string['errorname_not_equal'] = 'Wrongly equal';
 $string['errorname_equivalent_fractions'] = 'Equivalent fractions not recognised';
+$string['errorname_copied_wrong_result'] = 'Wrong result copied';
+$string['errorname_scale_error'] = 'Scale ignored';
+$string['errorname_counted_marks'] = 'Counted ticks instead of parts';
+$string['errorname_unit_error'] = 'Wrong whole';
+$string['errorname_inverse_operation'] = 'Wrong inverse operation';
+$string['errorname_forgot_divide'] = 'Forgot to divide';
+$string['errorname_multiplied_instead'] = 'Multiplied instead of divided';
 
 // Course reset.
 $string['resetattempts'] = 'Delete all rounds and mastery data';

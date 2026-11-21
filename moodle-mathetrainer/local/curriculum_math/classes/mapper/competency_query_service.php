@@ -5,6 +5,9 @@ namespace local_curriculum_math\mapper;
 
 use moodle_database;
 
+/**
+ * Read-only queries for other plugins (e.g. mod_mathetrainer).
+ */
 final class competency_query_service {
     public function __construct(private readonly moodle_database $db) {
     }
@@ -20,8 +23,9 @@ final class competency_query_service {
         $params = ['state' => $state];
 
         if ($grade !== null) {
-            $sql .= ' AND (c.gradefrom IS NULL OR c.gradefrom <= :grade) AND (c.gradeto IS NULL OR c.gradeto >= :grade)';
-            $params['grade'] = $grade;
+            $sql .= ' AND (c.gradefrom IS NULL OR c.gradefrom <= :grade1) AND (c.gradeto IS NULL OR c.gradeto >= :grade2)';
+            $params['grade1'] = $grade;
+            $params['grade2'] = $grade;
         }
 
         if ($topic !== null && $topic !== '') {
@@ -32,5 +36,37 @@ final class competency_query_service {
         $sql .= ' ORDER BY c.competencyid';
 
         return $this->db->get_records_sql($sql, $params);
+    }
+
+    /**
+     * Competencies for a selection list, grouped by state: competencyid => "ID – title".
+     *
+     * @return array<string, array<string, string>> state => [competencyid => label]
+     */
+    public function competency_options(): array {
+        $sql = "SELECT c.id, c.competencyid, c.title, f.state
+                  FROM {curriculum_competency} c
+                  JOIN {curriculum_framework} f ON f.id = c.frameworkfk
+              ORDER BY f.state, c.competencyid";
+        $options = [];
+        foreach ($this->db->get_records_sql($sql) as $row) {
+            $options[(string)$row->state][(string)$row->competencyid] = $row->competencyid . ' – ' . $row->title;
+        }
+        return $options;
+    }
+
+    /**
+     * Exercise template ids linked to a competency (by its curriculum id).
+     *
+     * @return string[]
+     */
+    public function template_ids_for_competency(string $competencyid): array {
+        $sql = "SELECT DISTINCT t.templateid
+                  FROM {exercise_template} t
+                  JOIN {exercise_competency_link} l ON l.templateid = t.id
+                  JOIN {curriculum_competency} c ON c.id = l.competencyid
+                 WHERE c.competencyid = :competencyid AND t.active = 1
+              ORDER BY t.templateid";
+        return array_values($this->db->get_fieldset_sql($sql, ['competencyid' => $competencyid]));
     }
 }

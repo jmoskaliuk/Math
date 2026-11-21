@@ -35,8 +35,9 @@ $string['topic_help'] = 'Bestimmt, welche Aufgabentypen erzeugt werden. Gibt es 
 $string['alltopics'] = 'Alle Themen';
 $string['requirementlevel'] = 'Anforderungsbereich';
 $string['any'] = 'Beliebig';
+$string['nocompetency'] = 'Keine (nach Thema und Klasse auswählen)';
 $string['competencyid'] = 'Kompetenz-ID';
-$string['competencyid_help'] = 'Optional: ID der Kompetenz aus dem Curriculum (z. B. NRW-MATH-07-RATIONAL-ZAHLEN). Der Lernstand wird für diese Kompetenz erfasst. Ohne Angabe wird das Thema verwendet.';
+$string['competencyid_help'] = 'Optional: Kompetenz aus dem Curriculum (z. B. NRW-MATH-07-RATIONAL-ZAHLEN). Sind ihr im Curriculum-Pack Aufgabentypen zugeordnet, werden genau diese verwendet. Der Lernstand wird für diese Kompetenz erfasst. Ohne Angabe wird nach Thema, Klasse und AFB ausgewählt.';
 
 // Learner view.
 $string['startintro'] = 'In jedem Durchgang bekommst du {$a} neue Aufgaben. Nach dem Abgeben siehst du sofort, was richtig war, und Hinweise zu deinen Fehlern.';
@@ -47,6 +48,11 @@ $string['attemptno'] = 'Durchgang {$a}';
 $string['exerciseno'] = 'Aufgabe {$a}';
 $string['prompt_calculate'] = 'Berechne {$a}';
 $string['prompt_compare'] = 'Setze das richtige Zeichen ein (<, = oder >): {$a}';
+$string['prompt_numberline'] = 'Welche Zahl ist am Zahlenstrahl markiert?';
+$string['prompt_fraction_numberline'] = 'Welcher Bruch ist am Zahlenstrahl markiert?';
+$string['prompt_find_error'] = 'Diese Rechnung ist falsch: {$a}. Wie lautet das richtige Ergebnis?';
+$string['prompt_equation'] = 'Löse die Gleichung {$a}. Gib x an.';
+$string['numberline_alt'] = 'Zahlenstrahl mit einem markierten Punkt';
 $string['numericinputhelp'] = 'Ganze Zahl, Bruch (z. B. -3/4) oder Dezimalzahl (z. B. 0,75)';
 $string['submitanswers'] = 'Antworten abgeben';
 $string['resultheading'] = 'Ergebnis von Durchgang {$a}';
@@ -73,6 +79,13 @@ $string['error_numerator_only'] = 'Bei unterschiedlichen Nennern reicht es nicht
 $string['error_relation_reversed'] = 'Das Zeichen ist genau umgekehrt.';
 $string['error_not_equal'] = 'Die Brüche sind nicht gleich groß. Erweitere auf einen gemeinsamen Nenner und vergleiche.';
 $string['error_equivalent_fractions'] = 'Die Brüche sind gleich groß – einer ist eine erweiterte Form des anderen.';
+$string['error_copied_wrong_result'] = 'Das ist genau das falsche Ergebnis aus der Aufgabe. Rechne selbst nach!';
+$string['error_scale_error'] = 'Du hast die Striche gezählt. Achte darauf, welchen Abstand ein Strich auf diesem Zahlenstrahl bedeutet.';
+$string['error_counted_marks'] = 'Du hast die Striche gezählt statt der Abschnitte. Der Nenner ist die Zahl der gleich großen Teile zwischen 0 und 1.';
+$string['error_unit_error'] = 'Du hast den ganzen Zahlenstrahl als ein Ganzes genommen. Das Ganze ist der Abschnitt von 0 bis 1.';
+$string['error_inverse_operation'] = 'Beim Umformen muss die Zahl mit der Gegenrechnung auf die andere Seite: aus + wird −, aus − wird +.';
+$string['error_forgot_divide'] = 'Fast: Du musst am Ende noch durch die Zahl vor dem x teilen.';
+$string['error_multiplied_instead'] = 'Die Zahl vor dem x wird durch Teilen entfernt, nicht durch Malnehmen.';
 
 // Teacher report.
 $string['reportheading'] = 'Auswertung';
@@ -93,6 +106,13 @@ $string['errorname_numerator_only'] = 'Nur Zähler verglichen';
 $string['errorname_relation_reversed'] = 'Zeichen vertauscht';
 $string['errorname_not_equal'] = 'Fälschlich gleich';
 $string['errorname_equivalent_fractions'] = 'Gleichwertige Brüche nicht erkannt';
+$string['errorname_copied_wrong_result'] = 'Falsches Ergebnis übernommen';
+$string['errorname_scale_error'] = 'Skala nicht beachtet';
+$string['errorname_counted_marks'] = 'Striche statt Abschnitte gezählt';
+$string['errorname_unit_error'] = 'Falsches Ganzes';
+$string['errorname_inverse_operation'] = 'Falsche Gegenrechnung';
+$string['errorname_forgot_divide'] = 'Teilen vergessen';
+$string['errorname_multiplied_instead'] = 'Multipliziert statt geteilt';
 
 // Course reset.
 $string['resetattempts'] = 'Alle Durchgänge und Lernstände löschen';

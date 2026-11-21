@@ -56,7 +56,21 @@ class mod_mathetrainer_mod_form extends moodleform_mod {
         ];
         $mform->addElement('select', 'requirementlevel', get_string('requirementlevel', 'mathetrainer'), $levels);
 
-        $mform->addElement('text', 'competencyid', get_string('competencyid', 'mathetrainer'), ['size' => 40]);
+        $competencies = [];
+        if (class_exists(\local_curriculum_math\mapper\competency_query_service::class)) {
+            global $DB;
+            $competencies = (new \local_curriculum_math\mapper\competency_query_service($DB))->competency_options();
+        }
+        if ($competencies) {
+            // Curriculum plugin with imported packs: choose from the list, grouped by state.
+            $groups = ['' => ['' => get_string('nocompetency', 'mathetrainer')]];
+            foreach ($competencies as $state => $options) {
+                $groups[$state] = $options;
+            }
+            $mform->addElement('selectgroups', 'competencyid', get_string('competencyid', 'mathetrainer'), $groups);
+        } else {
+            $mform->addElement('text', 'competencyid', get_string('competencyid', 'mathetrainer'), ['size' => 40]);
+        }
         $mform->setType('competencyid', PARAM_ALPHANUMEXT);
         $mform->addHelpButton('competencyid', 'competencyid', 'mathetrainer');
 

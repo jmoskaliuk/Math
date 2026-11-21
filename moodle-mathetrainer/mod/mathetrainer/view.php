@@ -69,7 +69,14 @@ $completion->set_module_viewed($cm);
 $renderprompt = static function (stdClass $item): string {
     $payload = $item->payload;
     $key = (string)($payload['promptkey'] ?? 'prompt_calculate');
-    return get_string($key, 'mathetrainer', s((string)($payload['expression'] ?? '')));
+    $text = get_string($key, 'mathetrainer', s((string)($payload['expression'] ?? '')));
+    if (!empty($payload['numberline']) && is_array($payload['numberline'])) {
+        $text .= html_writer::div(
+            \mod_mathetrainer\local\numberline_svg::render($payload['numberline'], get_string('numberline_alt', 'mathetrainer')),
+            'my-2'
+        );
+    }
+    return $text;
 };
 
 /**
@@ -114,20 +121,23 @@ if ($canattempt) {
             $fieldid = 'mathetrainer_answer_' . $slot;
             echo html_writer::start_div('card mb-3');
             echo html_writer::start_div('card-body');
-            echo html_writer::tag('label', get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
-                ['for' => $fieldid, 'class' => 'd-block font-weight-bold mb-2']);
+            $promptid = 'mathetrainer_prompt_' . $slot;
+            echo html_writer::div(get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
+                'font-weight-bold mb-2', ['id' => $promptid]);
 
             if (($item->payload['type'] ?? '') === 'choice') {
                 $options = ['' => get_string('choose')];
                 foreach ((array)$item->payload['options'] as $option) {
                     $options[$option] = $option;
                 }
-                echo html_writer::select($options, 'answer_' . $slot, '', false, ['id' => $fieldid, 'class' => 'custom-select']);
+                echo html_writer::select($options, 'answer_' . $slot, '', false,
+                    ['id' => $fieldid, 'class' => 'custom-select', 'aria-labelledby' => $promptid]);
             } else {
                 echo html_writer::empty_tag('input', [
                     'type' => 'text',
                     'name' => 'answer_' . $slot,
                     'id' => $fieldid,
+                    'aria-labelledby' => $promptid,
                     'class' => 'form-control',
                     'autocomplete' => 'off',
                     'inputmode' => 'text',
