@@ -5,7 +5,8 @@
  * Checks a learner response against the expected answer of a generated item
  * and determines an error category. Correctness never depends on AI.
  *
- * Categories: null (correct), 'empty', 'format', a generator diagnostic
+ * Categories: null (correct), 'empty', 'format', 'format_decimal',
+ * 'format_fraction', a generator diagnostic
  * (e.g. 'sign_error') or 'wrong'.
  *
  * @package    mod_mathetrainer
@@ -46,6 +47,14 @@ final class answer_validator {
         $given = fraction::parse($response);
         if ($given === null) {
             return self::result(false, 'format');
+        }
+        // Conversion tasks require a specific notation (e.g. "3/4" is not a decimal).
+        $format = $payload['format'] ?? null;
+        if ($format === 'decimal' && !preg_match('/[.,]/', $response)) {
+            return self::result(false, 'format_decimal', null, (string)$given);
+        }
+        if ($format === 'fraction' && !str_contains($response, '/')) {
+            return self::result(false, 'format_fraction', null, (string)$given);
         }
         $correct = fraction::parse($answer);
         if ($correct === null) {

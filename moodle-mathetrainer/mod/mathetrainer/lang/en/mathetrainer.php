@@ -52,6 +52,8 @@ $string['prompt_numberline'] = 'Which number is marked on the number line?';
 $string['prompt_fraction_numberline'] = 'Which fraction is marked on the number line?';
 $string['prompt_find_error'] = 'This calculation is wrong: {$a}. What is the correct result?';
 $string['prompt_equation'] = 'Solve the equation {$a}. Enter x.';
+$string['prompt_to_decimal'] = 'Write {$a} as a decimal.';
+$string['prompt_to_fraction'] = 'Write {$a} as a fraction.';
 $string['numberline_alt'] = 'Number line with a marked point';
 $string['numericinputhelp'] = 'Integer, fraction (e.g. -3/4) or decimal (e.g. 0.75)';
 $string['submitanswers'] = 'Submit answers';
@@ -86,6 +88,12 @@ $string['error_unit_error'] = 'You took the whole number line as one whole. The 
 $string['error_inverse_operation'] = 'When rearranging, use the inverse operation: + becomes −, − becomes +.';
 $string['error_forgot_divide'] = 'Almost: you still have to divide by the number in front of x.';
 $string['error_multiplied_instead'] = 'The number in front of x is removed by dividing, not by multiplying.';
+$string['error_format_decimal'] = 'A decimal is asked for, e.g. 0.75.';
+$string['error_format_fraction'] = 'A fraction is asked for, e.g. 3/4.';
+$string['error_order_of_operations'] = 'You calculated from left to right. Multiplication and division come before addition and subtraction!';
+$string['error_ignored_brackets'] = 'What is in brackets is calculated first.';
+$string['error_digits_copied'] = 'Writing numerator and denominator next to each other does not give the decimal. Expand to 10, 100 or 1000.';
+$string['error_place_value_error'] = 'Mind the place values: one decimal place means tenths, two mean hundredths.';
 
 // Teacher report.
 $string['reportheading'] = 'Report';
@@ -113,6 +121,12 @@ $string['errorname_unit_error'] = 'Wrong whole';
 $string['errorname_inverse_operation'] = 'Wrong inverse operation';
 $string['errorname_forgot_divide'] = 'Forgot to divide';
 $string['errorname_multiplied_instead'] = 'Multiplied instead of divided';
+$string['errorname_format_decimal'] = 'Not in decimal notation';
+$string['errorname_format_fraction'] = 'Not in fraction notation';
+$string['errorname_order_of_operations'] = 'Order of operations ignored';
+$string['errorname_ignored_brackets'] = 'Brackets ignored';
+$string['errorname_digits_copied'] = 'Digits copied';
+$string['errorname_place_value_error'] = 'Place value error';
 
 // Course reset.
 $string['resetattempts'] = 'Delete all rounds and mastery data';

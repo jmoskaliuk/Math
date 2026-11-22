@@ -26,10 +26,10 @@ final class pack_reader {
         }
 
         if ($ext === 'yaml' || $ext === 'yml') {
-            if (!function_exists('yaml_parse_file')) {
-                throw new coding_exception('YAML extension not available. Use JSON or install ext-yaml.');
-            }
-            $decoded = yaml_parse_file($filepath);
+            // Prefer ext-yaml if installed; otherwise use the built-in reader for the pack subset.
+            $decoded = function_exists('yaml_parse_file')
+                ? yaml_parse_file($filepath)
+                : (new yaml_reader())->parse(file_get_contents($filepath) ?: '');
             if (!is_array($decoded)) {
                 throw new coding_exception('Invalid YAML curriculum pack: ' . $filepath);
             }

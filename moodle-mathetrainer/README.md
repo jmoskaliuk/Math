@@ -33,7 +33,7 @@ Siehe Architektur-Dokumentation unter `docs/architecture.md`.
 
 ## Status
 
-Version 0.3.0 (Alpha), noch nicht in einer echten Moodle-Instanz getestet.
+Version 0.4.0 (Alpha), noch nicht in einer echten Moodle-Instanz getestet.
 
 - Lehrkraft legt Bundesland, Klasse, Thema, AFB und optional eine Kompetenz fest
 - Mit installiertem `local_curriculum_math` und importierten Packs: Kompetenz per Auswahlliste;
@@ -42,11 +42,14 @@ Version 0.3.0 (Alpha), noch nicht in einer echten Moodle-Instanz getestet.
 - Lernende bekommen pro Durchgang 5 generierte Aufgaben und sofort Rückmeldung mit Fehlerdiagnose
 - Lehrkräfte sehen Durchgänge, Durchschnitt pro Person und häufige Fehler
 - Lernstand je Kompetenz (`mathetrainer_mastery`), Privacy API, Kurs-Reset
+- Sicherung/Wiederherstellung (Backup/Restore) mit und ohne Nutzerdaten
 
 Aufgabentypen (deterministisch, gleicher Seed = gleiche Aufgabe):
 
 | Template | Thema | Klasse | AFB | Inhalt | Erkannte Fehler |
 |---|---|---|---|---|---|
+| `order_of_operations` | Natürliche Zahlen | 5–6 | I–II | Punkt vor Strich, Klammern | von links nach rechts gerechnet, Klammer ignoriert |
+| `decimal_convert` | Dezimalzahlen | 6–7 | I–II | Bruch ↔ Dezimalzahl (abbrechende Dezimalzahlen) | Ziffern abgeschrieben (3/4 → 0,34), Stellenwertfehler (0,35 → 35/10), falsche Schreibweise |
 | `fraction_numberline` | Brüche | 5–6 | I | Bruch am Zahlenstrahl ablesen (0–1, 0–2) | Striche statt Abschnitte gezählt, falsches Ganzes |
 | `fraction_compare` | Brüche | 6–7 | I–II | Brüche vergleichen (<, =, >) | größerer Nenner = größerer Bruch, nur Zähler verglichen, gleichwertige Brüche |
 | `integer_numberline` | Rationale Zahlen | 5–7 | I | Ganze Zahl am Zahlenstrahl ablesen, Skala selbst erschließen | Skala ignoriert, Vorzeichen |
@@ -57,10 +60,21 @@ Aufgabentypen (deterministisch, gleicher Seed = gleiche Aufgabe):
 Noch offen:
 
 - Test in einer Moodle-Instanz (Installation, Formular, Durchgang, Privacy)
-- Curriculum-Packs um Gleichungen und Klasse 5 ergänzen
-- Backup/Restore, Bewertung im Gradebook
-- YAML-Import braucht die PHP-Erweiterung `yaml` (alternativ JSON-Packs)
+- Fachliche Prüfung der Packs (Kurzlabels, Klassenzuordnungen, Leitidee für Gleichungen)
+- Bewertung im Gradebook
 - Keine produktive KI-Anbindung, kein Vollimport offizieller Lehrpläne
+
+## Curriculum importieren
+
+YAML-Packs werden mit `ext-yaml` gelesen, falls installiert, sonst mit einem eingebauten Leser
+(Teilmenge von YAML, ausreichend für die Packs). Erneutes Importieren aktualisiert vorhandene Einträge.
+
+```
+php local/curriculum_math/cli/import_curriculum.php --dir=/pfad/zu/curriculum-packs
+```
+
+Die Packs enthalten pro Landeskompetenz die passenden Aufgabentypen (`exercise_generators`) und die
+Zuordnung zur KMK-Kompetenz (`kmk.maps_to`, gespeichert in `curriculum_mapping`).
 
 ## Tests
 
@@ -68,6 +82,7 @@ PHPUnit-Tests liegen unter `mod/mathetrainer/tests/` (Moodle-Standard):
 
 ```
 vendor/bin/phpunit --testsuite mod_mathetrainer_testsuite
+vendor/bin/phpunit --testsuite local_curriculum_math_testsuite
 ```
 
 ## Entwicklung

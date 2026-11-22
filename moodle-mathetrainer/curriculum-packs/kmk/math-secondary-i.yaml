@@ -1,12 +1,34 @@
+# Entwurf: KMK-Basiskompetenzen als Bezugsrahmen für die Länderprofile.
 framework:
   id: "KMK-MATH-SI"
   country: "DE"
   state: "ALL"
   subject: "Mathematik"
   stage: "Sekundarstufe I"
-  version: "draft-0.1"
+  version: "draft-0.2"
 
 competencies:
+  - id: "KMK-SI-ZAHL-01"
+    title: "Rechenregeln und Rechengesetze nutzen"
+    topic: "Natürliche Zahlen"
+    grade_from: 5
+    grade_to: 6
+    leitidee: "Zahl und Operation"
+    process:
+      - "Mit mathematischen Objekten umgehen"
+    requirement_levels: ["AFB I", "AFB II"]
+
+  - id: "KMK-SI-BRUCH-01"
+    title: "Brüche und Dezimalzahlen darstellen und vergleichen"
+    topic: "Brüche"
+    grade_from: 5
+    grade_to: 6
+    leitidee: "Zahl und Operation"
+    process:
+      - "Mathematisch darstellen"
+      - "Mit mathematischen Objekten umgehen"
+    requirement_levels: ["AFB I", "AFB II"]
+
   - id: "KMK-SI-RAT-01"
     title: "Rationale Zahlen nutzen"
     topic: "Rationale Zahlen"
@@ -16,4 +38,15 @@ competencies:
     process:
       - "Mit mathematischen Objekten umgehen"
       - "Mathematisch kommunizieren"
+    requirement_levels: ["AFB I", "AFB II"]
+
+  - id: "KMK-SI-GLEICH-01"
+    title: "Lineare Gleichungen lösen"
+    topic: "Gleichungen"
+    grade_from: 7
+    grade_to: 8
+    leitidee: "Strukturen und funktionaler Zusammenhang"
+    process:
+      - "Mit mathematischen Objekten umgehen"
+      - "Probleme mathematisch lösen"
     requirement_levels: ["AFB I", "AFB II"]

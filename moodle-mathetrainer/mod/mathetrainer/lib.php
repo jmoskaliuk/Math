@@ -12,16 +12,13 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Features supported by this module.
- *
- * Backup/restore is intentionally not declared yet: there are no backup
- * classes, and declaring it would break course backups.
  */
 function mathetrainer_supports(string $feature): bool|string|null {
     return match ($feature) {
         FEATURE_MOD_INTRO => true,
         FEATURE_SHOW_DESCRIPTION => true,
         FEATURE_COMPLETION_TRACKS_VIEWS => true,
-        FEATURE_BACKUP_MOODLE2 => false,
+        FEATURE_BACKUP_MOODLE2 => true,
         FEATURE_GRADE_HAS_GRADE => false,
         FEATURE_MOD_PURPOSE => MOD_PURPOSE_ASSESSMENT,
         default => null,

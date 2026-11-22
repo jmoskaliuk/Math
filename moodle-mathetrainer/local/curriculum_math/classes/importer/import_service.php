@@ -77,11 +77,45 @@ final class import_service {
 
                 $generators = is_array($competency['exercise_generators'] ?? null) ? $competency['exercise_generators'] : [];
                 $this->link_templates((int)$comp->id, $comp, $generators);
+
+                if (!empty($framework['kmk_framework'])) {
+                    $targets = is_array($kmk['maps_to'] ?? null) ? $kmk['maps_to'] : [];
+                    $this->replace_mappings((string)$framework['id'], $comp->competencyid,
+                        (string)$framework['kmk_framework'], $targets);
+                }
             }
         }
 
         $transaction->allow_commit();
         return $frameworkfk;
+    }
+
+    /**
+     * Replaces the mappings of one state competency to KMK competencies.
+     *
+     * @param string[] $targets KMK competency ids
+     */
+    private function replace_mappings(string $fromframework, string $fromcompetency, string $toframework, array $targets): void {
+        global $DB;
+
+        $DB->delete_records('curriculum_mapping', [
+            'fromframework' => $fromframework,
+            'fromcompetency' => $fromcompetency,
+            'toframework' => $toframework,
+        ]);
+        foreach (array_unique(array_map('strval', $targets)) as $target) {
+            if (trim($target) === '') {
+                continue;
+            }
+            $DB->insert_record('curriculum_mapping', (object)[
+                'fromframework' => $fromframework,
+                'fromcompetency' => $fromcompetency,
+                'toframework' => $toframework,
+                'tocompetency' => trim($target),
+                'relationtype' => 'maps_to',
+                'confidence' => 1.0,
+            ]);
+        }
     }
 
     /**

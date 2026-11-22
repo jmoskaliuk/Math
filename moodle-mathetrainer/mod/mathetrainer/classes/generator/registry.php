@@ -19,6 +19,13 @@ final class registry {
      * @var array<string, array{class: class-string<exercise_generator>, topic: string, gradefrom: int, gradeto: int, levels: string[]}>
      */
     private const TEMPLATES = [
+        'order_of_operations' => [
+            'class' => order_of_operations::class,
+            'topic' => 'Natürliche Zahlen',
+            'gradefrom' => 5,
+            'gradeto' => 6,
+            'levels' => ['AFB I', 'AFB II'],
+        ],
         'fraction_numberline' => [
             'class' => fraction_numberline::class,
             'topic' => 'Brüche',
@@ -29,6 +36,13 @@ final class registry {
         'fraction_compare' => [
             'class' => fraction_compare::class,
             'topic' => 'Brüche',
+            'gradefrom' => 6,
+            'gradeto' => 7,
+            'levels' => ['AFB I', 'AFB II'],
+        ],
+        'decimal_convert' => [
+            'class' => decimal_convert::class,
+            'topic' => 'Dezimalzahlen',
             'gradefrom' => 6,
             'gradeto' => 7,
             'levels' => ['AFB I', 'AFB II'],

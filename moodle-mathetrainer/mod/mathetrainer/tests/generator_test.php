@@ -19,6 +19,8 @@ use mod_mathetrainer\validator\answer_validator;
  * @covers     \mod_mathetrainer\generator\fraction_numberline
  * @covers     \mod_mathetrainer\generator\linear_equation
  * @covers     \mod_mathetrainer\generator\sign_error_analysis
+ * @covers     \mod_mathetrainer\generator\order_of_operations
+ * @covers     \mod_mathetrainer\generator\decimal_convert
  * @license    MIT
  */
 final class generator_test extends \basic_testcase {
@@ -86,6 +88,8 @@ final class generator_test extends \basic_testcase {
 
     public function test_registry_find(): void {
         $this->assertSame(['fraction_compare'], registry::find('Brüche', 7));
+        $this->assertSame(['order_of_operations'], registry::find('Natürliche Zahlen', 5));
+        $this->assertSame(['decimal_convert'], registry::find('Dezimalzahlen', 6));
         $this->assertSame(['fraction_numberline', 'fraction_compare'], registry::find('Brüche', 6));
         $this->assertSame(['integer_numberline', 'rational_addition', 'sign_error_analysis'],
             registry::find('Rationale Zahlen', 7));
@@ -106,6 +110,93 @@ final class generator_test extends \basic_testcase {
             registry::find('Rationale Zahlen', 9, null, ['fraction_compare', 'fraction_numberline', 'unknown']));
         // Only unknown ids: fall back to the normal selection.
         $this->assertSame(['linear_equation'], registry::find('Gleichungen', 7, null, ['unknown']));
+    }
+
+    public function test_order_of_operations(): void {
+        $generator = new task_generator();
+        $seen = [];
+        for ($seed = 1; $seed <= 500; $seed++) {
+            $exercise = $generator->generate('order_of_operations', $seed);
+            // Evaluate with PHP's own operator precedence.
+            $php = strtr($exercise['payload']['expression'], ["\u{00B7}" => '*', "\u{2212}" => '-', ':' => '/']);
+            $this->assertMatchesRegularExpression('/^[\d\s+\-*\/()]+$/', $php);
+            $value = self::evaluate($php);
+            $this->assertSame((string)$value, $exercise['expected']['answer'], "seed $seed: $php");
+            $this->assertGreaterThanOrEqual(0, $value);
+            $this->assertArrayNotHasKey($exercise['expected']['answer'], $exercise['expected']['diagnostics']);
+            foreach ($exercise['expected']['diagnostics'] as $category) {
+                $seen[$category] = true;
+            }
+        }
+        $this->assertCount(2, $seen, 'Both misconceptions occur.');
+    }
+
+    /**
+     * Tiny recursive-descent evaluator for + - * / and brackets (independent of the generator).
+     */
+    private static function evaluate(string $expression): int {
+        preg_match_all('/\d+|[-+*\/()]/', $expression, $m);
+        $tokens = $m[0];
+        $pos = 0;
+        $factor = static function () use (&$tokens, &$pos, &$sum): int {
+            $token = $tokens[$pos++];
+            if ($token === '(') {
+                $value = $sum();
+                $pos++; // Closing bracket.
+                return $value;
+            }
+            return (int)$token;
+        };
+        $product = static function () use (&$tokens, &$pos, $factor): int {
+            $value = $factor();
+            while (isset($tokens[$pos]) && in_array($tokens[$pos], ['*', '/'], true)) {
+                $value = $tokens[$pos++] === '*' ? $value * $factor() : intdiv($value, $factor());
+            }
+            return $value;
+        };
+        $sum = static function () use (&$tokens, &$pos, $product): int {
+            $value = $product();
+            while (isset($tokens[$pos]) && in_array($tokens[$pos], ['+', '-'], true)) {
+                $value = $tokens[$pos++] === '+' ? $value + $product() : $value - $product();
+            }
+            return $value;
+        };
+        return $sum();
+    }
+
+    public function test_decimal_convert(): void {
+        $generator = new task_generator();
+        $validator = new answer_validator();
+        $formats = [];
+        for ($seed = 1; $seed <= 500; $seed++) {
+            $exercise = $generator->generate('decimal_convert', $seed);
+            $payload = $exercise['payload'];
+            $expected = $exercise['expected'];
+            $value = fraction::parse($expected['answer']);
+            $formats[$payload['format']] = true;
+
+            if ($payload['format'] === 'decimal') {
+                // Shown fraction and displayed decimal have the same value.
+                $this->assertTrue(fraction::parse($payload['expression'])->equals($value));
+                $this->assertTrue(fraction::parse($expected['display'])->equals($value));
+                $this->assertStringContainsString(',', $expected['display']);
+                $this->assertSame('format_decimal', $validator->check($payload, $expected, $expected['answer'])['category']);
+            } else {
+                $this->assertTrue(fraction::parse($payload['expression'])->equals($value));
+                $this->assertSame('format_fraction', $validator->check($payload, $expected, $payload['expression'])['category']);
+            }
+        }
+        $this->assertCount(2, $formats);
+
+        // Typical mistakes, checked on fixed examples.
+        $payload = ['type' => 'numeric', 'format' => 'decimal'];
+        $expected = ['answer' => '3/4', 'diagnostics' => ['17/50' => 'digits_copied', '17/5' => 'digits_copied']];
+        $this->assertSame('digits_copied', $validator->check($payload, $expected, '0,34')['category']);
+        $this->assertTrue($validator->check($payload, $expected, '0,75')['correct']);
+        $payload = ['type' => 'numeric', 'format' => 'fraction'];
+        $expected = ['answer' => '7/20', 'diagnostics' => ['7/2' => 'place_value_error']];
+        $this->assertSame('place_value_error', $validator->check($payload, $expected, '35/10')['category']);
+        $this->assertTrue($validator->check($payload, $expected, '35/100')['correct']);
     }
 
     public function test_integer_numberline(): void {
@@ -175,8 +266,13 @@ final class generator_test extends \basic_testcase {
         foreach (registry::templateids() as $templateid) {
             for ($seed = 1; $seed <= 100; $seed++) {
                 $exercise = $generator->generate($templateid, $seed);
-                $result = $validator->check($exercise['payload'], $exercise['expected'], $exercise['expected']['answer']);
+                $answer = $exercise['expected']['display'] ?? $exercise['expected']['answer'];
+                $result = $validator->check($exercise['payload'], $exercise['expected'], $answer);
                 $this->assertTrue($result['correct'], "$templateid seed $seed");
+                if (isset($exercise['payload']['format'])) {
+                    // Notation-bound tasks are covered in test_decimal_convert.
+                    continue;
+                }
                 foreach ($exercise['expected']['diagnostics'] as $wrong => $category) {
                     $result = $validator->check($exercise['payload'], $exercise['expected'], (string)$wrong);
                     $this->assertFalse($result['correct']);

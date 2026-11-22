@@ -52,6 +52,8 @@ $string['prompt_numberline'] = 'Welche Zahl ist am Zahlenstrahl markiert?';
 $string['prompt_fraction_numberline'] = 'Welcher Bruch ist am Zahlenstrahl markiert?';
 $string['prompt_find_error'] = 'Diese Rechnung ist falsch: {$a}. Wie lautet das richtige Ergebnis?';
 $string['prompt_equation'] = 'Löse die Gleichung {$a}. Gib x an.';
+$string['prompt_to_decimal'] = 'Schreibe {$a} als Dezimalzahl.';
+$string['prompt_to_fraction'] = 'Schreibe {$a} als Bruch.';
 $string['numberline_alt'] = 'Zahlenstrahl mit einem markierten Punkt';
 $string['numericinputhelp'] = 'Ganze Zahl, Bruch (z. B. -3/4) oder Dezimalzahl (z. B. 0,75)';
 $string['submitanswers'] = 'Antworten abgeben';
@@ -86,6 +88,12 @@ $string['error_unit_error'] = 'Du hast den ganzen Zahlenstrahl als ein Ganzes ge
 $string['error_inverse_operation'] = 'Beim Umformen muss die Zahl mit der Gegenrechnung auf die andere Seite: aus + wird −, aus − wird +.';
 $string['error_forgot_divide'] = 'Fast: Du musst am Ende noch durch die Zahl vor dem x teilen.';
 $string['error_multiplied_instead'] = 'Die Zahl vor dem x wird durch Teilen entfernt, nicht durch Malnehmen.';
+$string['error_format_decimal'] = 'Gefragt ist eine Dezimalzahl mit Komma, z. B. 0,75.';
+$string['error_format_fraction'] = 'Gefragt ist ein Bruch mit Bruchstrich, z. B. 3/4.';
+$string['error_order_of_operations'] = 'Du hast von links nach rechts gerechnet. Es gilt: Punkt vor Strich!';
+$string['error_ignored_brackets'] = 'Was in der Klammer steht, wird zuerst gerechnet.';
+$string['error_digits_copied'] = 'Zähler und Nenner hintereinander zu schreiben ergibt nicht die Dezimalzahl. Erweitere auf 10, 100 oder 1000.';
+$string['error_place_value_error'] = 'Achte auf die Stellenwerte: Eine Stelle nach dem Komma sind Zehntel, zwei Stellen Hundertstel.';
 
 // Teacher report.
 $string['reportheading'] = 'Auswertung';
@@ -113,6 +121,12 @@ $string['errorname_unit_error'] = 'Falsches Ganzes';
 $string['errorname_inverse_operation'] = 'Falsche Gegenrechnung';
 $string['errorname_forgot_divide'] = 'Teilen vergessen';
 $string['errorname_multiplied_instead'] = 'Multipliziert statt geteilt';
+$string['errorname_format_decimal'] = 'Keine Dezimalschreibweise';
+$string['errorname_format_fraction'] = 'Keine Bruchschreibweise';
+$string['errorname_order_of_operations'] = 'Punkt vor Strich missachtet';
+$string['errorname_ignored_brackets'] = 'Klammer missachtet';
+$string['errorname_digits_copied'] = 'Ziffern abgeschrieben';
+$string['errorname_place_value_error'] = 'Stellenwertfehler';
 
 // Course reset.
 $string['resetattempts'] = 'Alle Durchgänge und Lernstände löschen';

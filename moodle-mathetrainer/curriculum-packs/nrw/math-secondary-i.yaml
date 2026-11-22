@@ -1,12 +1,71 @@
+# Entwurf: Kurzlabels und Klassenzuordnungen sind fachlich gegen den
+# Kernlehrplan NRW zu prüfen. Keine Originaltexte des Lehrplans übernehmen.
 framework:
   id: "NRW-MATH-SI"
   country: "DE"
   state: "NRW"
   subject: "Mathematik"
   stage: "Sekundarstufe I"
-  version: "draft-0.1"
+  version: "draft-0.2"
+  kmk_framework: "KMK-MATH-SI"
 
 competencies:
+  - id: "NRW-MATH-05-RECHENGESETZE"
+    title: "Rechenregeln anwenden"
+    teacher_label: "Terme mit natürlichen Zahlen unter Beachtung von Punkt vor Strich und Klammern berechnen"
+    student_label: "Ich kann Punkt-vor-Strich und Klammern beim Rechnen beachten."
+    grade_from: 5
+    grade_to: 6
+    topic: "Natürliche Zahlen"
+    kmk:
+      maps_to: ["KMK-SI-ZAHL-01"]
+      leitidee: "Zahl und Operation"
+      process:
+        - "Mit mathematischen Objekten umgehen"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "order_of_operations"
+
+  - id: "NRW-MATH-06-BRUECHE"
+    title: "Brüche darstellen und vergleichen"
+    teacher_label: "Brüche am Zahlenstrahl darstellen, ablesen und der Größe nach vergleichen"
+    student_label: "Ich kann Brüche am Zahlenstrahl zeigen und vergleichen."
+    grade_from: 5
+    grade_to: 6
+    topic: "Brüche"
+    kmk:
+      maps_to: ["KMK-SI-BRUCH-01"]
+      leitidee: "Zahl und Operation"
+      process:
+        - "Mathematisch darstellen"
+        - "Mit mathematischen Objekten umgehen"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "fraction_numberline"
+      - "fraction_compare"
+
+  - id: "NRW-MATH-06-DEZIMALZAHLEN"
+    title: "Brüche und Dezimalzahlen umwandeln"
+    teacher_label: "Zwischen Bruch- und Dezimalschreibweise wechseln"
+    student_label: "Ich kann Brüche als Dezimalzahlen schreiben und umgekehrt."
+    grade_from: 6
+    grade_to: 6
+    topic: "Dezimalzahlen"
+    kmk:
+      maps_to: ["KMK-SI-BRUCH-01"]
+      leitidee: "Zahl und Operation"
+      process:
+        - "Mathematisch darstellen"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "decimal_convert"
+
   - id: "NRW-MATH-07-RATIONAL-ZAHLEN"
     title: "Rationale Zahlen verstehen und anwenden"
     teacher_label: "Rationale Zahlen darstellen, ordnen und mit ihnen rechnen"
@@ -15,6 +74,7 @@ competencies:
     grade_to: 7
     topic: "Rationale Zahlen"
     kmk:
+      maps_to: ["KMK-SI-RAT-01"]
       leitidee: "Zahl und Operation"
       process:
         - "Mit mathematischen Objekten umgehen"
@@ -26,3 +86,22 @@ competencies:
       - "integer_numberline"
       - "rational_addition"
       - "sign_error_analysis"
+
+  - id: "NRW-MATH-07-GLEICHUNGEN"
+    title: "Lineare Gleichungen lösen"
+    teacher_label: "Einfache lineare Gleichungen durch Äquivalenzumformungen lösen"
+    student_label: "Ich kann einfache Gleichungen Schritt für Schritt lösen."
+    grade_from: 7
+    grade_to: 8
+    topic: "Gleichungen"
+    kmk:
+      maps_to: ["KMK-SI-GLEICH-01"]
+      leitidee: "Strukturen und funktionaler Zusammenhang"
+      process:
+        - "Mit mathematischen Objekten umgehen"
+        - "Probleme mathematisch lösen"
+      requirement_levels:
+        - "AFB I"
+        - "AFB II"
+    exercise_generators:
+      - "linear_equation"

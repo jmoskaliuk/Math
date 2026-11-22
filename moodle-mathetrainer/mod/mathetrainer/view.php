@@ -95,7 +95,7 @@ $renderfeedback = static function (array $result, array $expected): string {
     $text = get_string_manager()->string_exists($key, 'mathetrainer')
         ? get_string($key, 'mathetrainer')
         : get_string('error_wrong', 'mathetrainer');
-    $answer = str_replace('-', "\u{2212}", (string)$expected['answer']);
+    $answer = str_replace('-', "\u{2212}", (string)($expected['display'] ?? $expected['answer']));
     return $text . ' ' . get_string('correctansweris', 'mathetrainer', s($answer));
 };
 
