@@ -30,7 +30,7 @@ final class numberline_svg {
     /**
      * Renders a number line with labelled ticks and a marked point.
      *
-     * @param array{divisions: int, labels: array<int|string, string>, marked: int} $line
+     * @param array $line array{divisions: int, labels: array<int|string, string>, marked: int}
      * @param string $alttext accessible description
      * @return string SVG markup
      */

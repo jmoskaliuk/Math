@@ -133,6 +133,9 @@ final class registry {
      * ids linked to a curriculum competency), only those are considered as long
      * as at least one of them is known to this plugin.
      *
+     * @param string|null $topic topic filter
+     * @param int|null $grade grade filter
+     * @param string|null $level level filter
      * @param string[]|null $allowed
      * @return string[]
      */

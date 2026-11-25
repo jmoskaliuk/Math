@@ -91,6 +91,9 @@ final class attempt_manager {
 
     /**
      * Returns the running attempt or creates a new one with freshly generated items.
+     *
+     * @param int $userid learner
+     * @return stdClass the attempt
      */
     public function start_attempt(int $userid): stdClass {
         if ($existing = $this->get_inprogress_attempt($userid)) {
@@ -217,7 +220,8 @@ final class attempt_manager {
     /**
      * Grades all items of an in-progress attempt and finishes it.
      *
-     * @param array<int, string> $answers learner answers keyed by slot
+     * @param stdClass $attempt the attempt
+     * @param array $answers learner answers keyed by slot (array<int, string>)
      */
     public function submit(stdClass $attempt, array $answers): stdClass {
         if ($attempt->status !== self::STATUS_INPROGRESS) {
@@ -270,6 +274,10 @@ final class attempt_manager {
 
     /**
      * Running mean of attempt scores per learner and competency.
+     *
+     * @param int $userid learner
+     * @param float $score attempt score
+     * @param int $now timestamp
      */
     private function update_mastery(int $userid, float $score, int $now): void {
         $key = $this->competency_key();
@@ -332,6 +340,10 @@ final class attempt_manager {
 
     /**
      * Removes all learner data of one activity (used on delete and reset).
+     *
+     * @param moodle_database $db database
+     * @param int $instanceid activity instance id
+     * @param int|null $userid only this learner, null for all
      */
     public static function delete_instance_data(moodle_database $db, int $instanceid, ?int $userid = null): void {
         $params = ['mathetrainerid' => $instanceid];

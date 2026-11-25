@@ -99,6 +99,9 @@ final class decimal_convert implements exercise_generator {
 
     /**
      * Exact decimal notation (with point) of a fraction whose denominator divides a power of ten.
+     *
+     * @param fraction $value fraction to convert
+     * @return string decimal notation
      */
     private static function to_decimal(fraction $value): string {
         for ($digits = 1; $digits <= 6; $digits++) {

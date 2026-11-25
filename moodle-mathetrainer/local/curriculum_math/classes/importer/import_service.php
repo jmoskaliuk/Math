@@ -120,6 +120,9 @@ final class import_service {
     /**
      * Replaces the mappings of one state competency to KMK competencies.
      *
+     * @param string $fromframework source framework
+     * @param string $fromcompetency source competency id
+     * @param string $toframework target framework
      * @param string[] $targets KMK competency ids
      */
     private function replace_mappings(string $fromframework, string $fromcompetency, string $toframework, array $targets): void {
@@ -149,6 +152,8 @@ final class import_service {
      * Registers the exercise templates named in a pack and links them to the competency.
      * Generator classes live in the activity plugin; only the template ids are stored here.
      *
+     * @param int $competencyfk competency record id
+     * @param stdClass $competency competency
      * @param string[] $templateids
      */
     private function link_templates(int $competencyfk, stdClass $competency, array $templateids): void {

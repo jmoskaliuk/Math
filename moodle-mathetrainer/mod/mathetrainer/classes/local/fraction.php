@@ -59,6 +59,7 @@ final class fraction {
      * and decimals with comma or point ("0,75", "-1.5"). The typographic minus
      * sign (U+2212) and surrounding spaces are tolerated.
      *
+     * @param string $input learner input
      * @return self|null null if the input is not a number.
      */
     public static function parse(string $input): ?self {
@@ -85,6 +86,9 @@ final class fraction {
 
     /**
      * True if the input is written as a fraction that is not in lowest terms (e.g. "2/4").
+     *
+     * @param string $input learner input
+     * @return bool
      */
     public static function is_unreduced_input(string $input): bool {
         $s = str_replace(["\u{2212}", ' '], ['-', ''], trim($input));

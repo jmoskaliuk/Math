@@ -54,6 +54,10 @@ final class random {
 
     /**
      * Integer in the closed interval [$min, $max].
+     *
+     * @param int $min lower bound
+     * @param int $max upper bound
+     * @return int
      */
     public function int(int $min, int $max): int {
         if ($max < $min) {
@@ -64,6 +68,10 @@ final class random {
 
     /**
      * Integer in [$min, $max] excluding zero.
+     *
+     * @param int $min lower bound
+     * @param int $max upper bound
+     * @return int
      */
     public function nonzero_int(int $min, int $max): int {
         do {
@@ -85,6 +93,10 @@ final class random {
 
     /**
      * True with probability $numerator / $denominator.
+     *
+     * @param int $numerator numerator of the probability
+     * @param int $denominator denominator of the probability
+     * @return bool
      */
     public function chance(int $numerator, int $denominator): bool {
         return $this->int(1, $denominator) <= $numerator;

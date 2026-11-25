@@ -137,6 +137,9 @@ final class generator_test extends \basic_testcase {
 
     /**
      * Tiny recursive-descent evaluator for + - * / and brackets (independent of the generator).
+     *
+     * @param string $expression expression to evaluate
+     * @return int
      */
     private static function evaluate(string $expression): int {
         preg_match_all('/\d+|[-+*\/()]/', $expression, $m);

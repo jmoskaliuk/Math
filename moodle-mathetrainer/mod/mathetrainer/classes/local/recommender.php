@@ -35,8 +35,8 @@ final class recommender {
     /**
      * Recommendation for one learner: status, templates to repeat and an error focus.
      *
-     * @param array<string, array{total: int, correct: int}> $templates per template id
-     * @param array<string, int> $errors error category => count
+     * @param array $templates per template id (array<string, array{total: int, correct: int}>)
+     * @param array $errors error category => count (array<string, int>)
      * @return array{status: string, repeat: string[], focus: ?string, rate: ?float}
      *         status: 'notstarted' | 'mastered' | 'practise' | 'ontrack'
      */

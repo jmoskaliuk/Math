@@ -43,6 +43,7 @@ final class grading {
      * Aggregated score of the finished attempts of one learner.
      *
      * @param float[] $scores scores 0..1 in attempt order (oldest first)
+     * @param int $method grading method
      * @return float|null null if there is no finished attempt
      */
     public static function aggregate(array $scores, int $method): ?float {

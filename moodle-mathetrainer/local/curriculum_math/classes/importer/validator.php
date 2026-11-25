@@ -21,7 +21,7 @@ final class validator {
     /**
      * Validates a decoded pack and throws if a required framework field is missing.
      *
-     * @param array<string, mixed> $pack
+     * @param array $pack decoded pack (array<string, mixed>)
      */
     public function validate(array $pack): void {
         if (empty($pack['framework']) || !is_array($pack['framework'])) {

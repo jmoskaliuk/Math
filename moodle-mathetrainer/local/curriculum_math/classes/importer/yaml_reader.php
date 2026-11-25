@@ -260,6 +260,9 @@ final class yaml_reader {
 
     /**
      * Removes a trailing comment (" #...") that is not inside quotes.
+     *
+     * @param string $line input line
+     * @return string
      */
     private static function strip_comment(string $line): string {
         $quote = null;

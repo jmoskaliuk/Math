@@ -26,8 +26,8 @@ final class answer_validator {
     /**
      * Checks a response against the expected answer of an item.
      *
-     * @param array<string, mixed> $payload
-     * @param array<string, mixed> $expected
+     * @param array $payload item payload (array<string, mixed>)
+     * @param array $expected expected answer (array<string, mixed>)
      * @param string $response Learner response
      * @return array{correct: bool, category: ?string, hint: ?string, normalised: ?string}
      */

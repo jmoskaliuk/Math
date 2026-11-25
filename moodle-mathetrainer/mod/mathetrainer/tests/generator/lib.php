@@ -41,6 +41,9 @@ class mod_mathetrainer_generator extends testing_module_generator {
     /**
      * Creates a finished round for a user with the given number of correct answers.
      *
+     * @param stdClass $instance activity record
+     * @param int $userid learner
+     * @param int $correct number of correct answers
      * @return stdClass the attempt
      */
     public function create_finished_attempt(stdClass $instance, int $userid, int $correct): stdClass {

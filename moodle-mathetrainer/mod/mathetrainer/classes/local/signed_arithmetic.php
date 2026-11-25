@@ -91,7 +91,7 @@ final class signed_arithmetic {
     /**
      * Adds a wrong result with its category unless it equals the correct result or is already listed.
      *
-     * @param array<string, string> $diagnostics
+     * @param array $diagnostics wrong result => category (array<string, string>)
      * @param fraction $wrong Wrong result
      * @param string $category Error category
      */

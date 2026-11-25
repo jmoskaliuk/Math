@@ -80,6 +80,7 @@ final class competency_query_service {
     /**
      * Exercise template ids linked to a competency (by its curriculum id).
      *
+     * @param string $competencyid curriculum id of the competency
      * @return string[]
      */
     public function template_ids_for_competency(string $competencyid): array {

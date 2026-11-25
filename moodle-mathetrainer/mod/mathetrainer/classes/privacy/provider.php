@@ -219,6 +219,9 @@ class provider implements
 
     /**
      * Activity instance id for a module context of this plugin, otherwise null.
+     *
+     * @param context $context context
+     * @return int|null
      */
     private static function instance_id(context $context): ?int {
         if (!$context instanceof context_module) {

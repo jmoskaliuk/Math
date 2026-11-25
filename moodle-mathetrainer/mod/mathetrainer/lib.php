@@ -10,6 +10,9 @@
 
 /**
  * Features supported by this module.
+ *
+ * @param string $feature FEATURE_xx constant
+ * @return bool|string|null true/false or a value if supported, null if unknown
  */
 function mathetrainer_supports(string $feature): bool|string|null {
     return match ($feature) {
@@ -25,6 +28,9 @@ function mathetrainer_supports(string $feature): bool|string|null {
 
 /**
  * Normalises form data to the database record.
+ *
+ * @param stdClass $data form data
+ * @return stdClass database record
  */
 function mathetrainer_prepare_record(stdClass $data): stdClass {
     $data->topic = isset($data->topic) && $data->topic !== '' ? (string)$data->topic : null;
@@ -144,6 +150,8 @@ function mathetrainer_grade_item_delete(stdClass $instance): int {
 /**
  * Grades of learners from their finished attempts, aggregated by the grading method.
  *
+ * @param stdClass $instance activity record
+ * @param int $userid only this learner, 0 for all
  * @return array<int, stdClass> userid => (userid, rawgrade)
  */
 function mathetrainer_get_user_grades(stdClass $instance, int $userid = 0): array {
@@ -177,6 +185,10 @@ function mathetrainer_get_user_grades(stdClass $instance, int $userid = 0): arra
 
 /**
  * Writes grades to the gradebook (all learners or one).
+ *
+ * @param stdClass $instance activity record
+ * @param int $userid only this learner, 0 for all
+ * @param bool $nullifnone write a null grade if the learner has none
  */
 function mathetrainer_update_grades(stdClass $instance, int $userid = 0, bool $nullifnone = true): void {
     if ((int)($instance->grade ?? 0) === 0) {
@@ -192,6 +204,8 @@ function mathetrainer_update_grades(stdClass $instance, int $userid = 0, bool $n
 
 /**
  * Course reset: adds the "delete all attempts" checkbox.
+ *
+ * @param MoodleQuickForm $mform course reset form
  */
 function mathetrainer_reset_course_form_definition(&$mform): void {
     $mform->addElement('header', 'mathetrainerheader', get_string('modulenameplural', 'mathetrainer'));
@@ -268,6 +282,9 @@ function mathetrainer_recommendation_text(array $recommendation, bool $forlearne
 
 /**
  * Adds the report to the activity navigation.
+ *
+ * @param settings_navigation $settings settings navigation
+ * @param navigation_node $node activity node
  */
 function mathetrainer_extend_settings_navigation(settings_navigation $settings, navigation_node $node): void {
     $cm = $settings->get_page()->cm;
