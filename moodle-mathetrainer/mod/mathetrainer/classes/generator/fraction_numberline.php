@@ -20,7 +20,16 @@ namespace mod_mathetrainer\generator;
 use mod_mathetrainer\local\fraction;
 use mod_mathetrainer\local\random;
 
+/**
+ * Generator for reading off a fraction on a number line.
+ */
 final class fraction_numberline implements exercise_generator {
+    /**
+     * Generates a number line with a marked fraction.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
         $parts = $rng->pick([2, 3, 4, 5, 6, 8, 10]);

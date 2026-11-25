@@ -1,4 +1,6 @@
 # Entwurf: KMK-Basiskompetenzen als Bezugsrahmen für die Länderprofile.
+# Leitidee bei Gleichungen: "Strukturen und funktionaler Zusammenhang" (Algebra und Funktionen),
+# plausibel laut Sekundärquellen; Abgleich mit den KMK-Bildungsstandards 2022 (ESA/MSA) steht aus.
 framework:
   id: "KMK-MATH-SI"
   country: "DE"

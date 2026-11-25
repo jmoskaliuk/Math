@@ -33,16 +33,20 @@ Siehe Architektur-Dokumentation unter `docs/architecture.md`.
 
 ## Status
 
-Version 0.4.0 (Alpha), noch nicht in einer echten Moodle-Instanz getestet.
+Version 0.5.0 (Alpha). **Getestet in Moodle 4.5 mit PostgreSQL**: Installation, Upgrade, Import, Durchgang
+im Browser, Gradebook, Bericht, Backup/Restore, Privacy API (64 PHPUnit-Tests), Moodle-Coding-Standard ohne Befund.
 
-- Lehrkraft legt Bundesland, Klasse, Thema, AFB und optional eine Kompetenz fest
+- Lehrkraft legt Bundesland, Schulform, Klasse, Thema, AFB und optional eine Kompetenz fest
 - Mit installiertem `local_curriculum_math` und importierten Packs: Kompetenz per Auswahlliste;
   die im Pack hinterlegten `exercise_generators` bestimmen dann die Aufgabentypen
-- Ohne Kompetenz: Auswahl nach Thema, Klasse und AFB (mit schrittweiser Lockerung, damit nie leer)
-- Lernende bekommen pro Durchgang 5 generierte Aufgaben und sofort Rückmeldung mit Fehlerdiagnose
-- Lehrkräfte sehen Durchgänge, Durchschnitt pro Person und häufige Fehler
-- Lernstand je Kompetenz (`mathetrainer_mastery`), Privacy API, Kurs-Reset
-- Sicherung/Wiederherstellung (Backup/Restore) mit und ohne Nutzerdaten
+- Lernende bekommen pro Durchgang 5 generierte Aufgaben, sofort Rückmeldung mit Fehlerdiagnose und
+  eine Übungsempfehlung
+- **Gradebook**: Punkte oder Skala, Bewertungsmethode bester/letzter/erster Durchgang oder Durchschnitt
+- **Bericht** für Lehrkräfte: je Lernende und Aufgabentyp, Klassenübersicht, typische Fehler,
+  Empfehlungen, Gruppen, Download (CSV, Excel, ODS …)
+- **Bloom-Lernpakete**: aus den Aufgabentypen einer Aktivität ein Paket für Bloom erzeugen, typische
+  Fehler werden zu Multiple-Choice-Optionen mit Erklärung (siehe `docs/bloom-integration.md`)
+- Lernstand je Kompetenz, Privacy API, Kurs-Reset, Backup/Restore
 
 Aufgabentypen (deterministisch, gleicher Seed = gleiche Aufgabe):
 
@@ -59,9 +63,9 @@ Aufgabentypen (deterministisch, gleicher Seed = gleiche Aufgabe):
 
 Noch offen:
 
-- Test in einer Moodle-Instanz (Installation, Formular, Durchgang, Privacy)
 - Fachliche Prüfung der Packs (Kurzlabels, Klassenzuordnungen, Leitidee für Gleichungen)
-- Bewertung im Gradebook
+- Bloom-Pilot (Pakete in Bloom anlegen, als SCORM in Moodle nutzen)
+- Lizenz klären: Moodle verlangt für das Plugin-Verzeichnis GPL v3 (Repo ist MIT)
 - Keine produktive KI-Anbindung, kein Vollimport offizieller Lehrpläne
 
 ## Curriculum importieren
@@ -76,7 +80,11 @@ php local/curriculum_math/cli/import_curriculum.php --dir=/pfad/zu/curriculum-pa
 Die Packs enthalten pro Landeskompetenz die passenden Aufgabentypen (`exercise_generators`) und die
 Zuordnung zur KMK-Kompetenz (`kmk.maps_to`, gespeichert in `curriculum_mapping`).
 
-## Tests
+## Tests und CI
+
+GitHub Actions (`.github/workflows/moodle-plugin-ci.yml`) prüft beide Plugins mit `moodle-plugin-ci`
+in Moodle 4.1 und 4.5: PHP-Lint, Coding Standard (`phpcs.xml`), PHPDoc, Validierung, Savepoints, PHPUnit.
+
 
 PHPUnit-Tests liegen unter `mod/mathetrainer/tests/` (Moodle-Standard):
 

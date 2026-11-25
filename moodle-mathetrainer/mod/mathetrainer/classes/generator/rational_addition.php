@@ -20,9 +20,19 @@ use mod_mathetrainer\local\fraction;
 use mod_mathetrainer\local\random;
 use mod_mathetrainer\local\signed_arithmetic;
 
+/**
+ * Generator for addition and subtraction with signed integers and fractions.
+ */
 final class rational_addition implements exercise_generator {
+    /** @var int[] Denominators used for fractions */
     private const DENOMINATORS = [2, 3, 4, 5, 6, 8, 10];
 
+    /**
+     * Generates a signed addition or subtraction with at least one negative operand.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
 
@@ -55,6 +65,12 @@ final class rational_addition implements exercise_generator {
         ];
     }
 
+    /**
+     * Random signed fraction that does not reduce to an integer.
+     *
+     * @param random $rng Random number generator
+     * @return fraction
+     */
     public static function random_fraction(random $rng): fraction {
         $denominator = $rng->pick(self::DENOMINATORS);
         $numerator = $rng->nonzero_int(-($denominator * 2 - 1), $denominator * 2 - 1);

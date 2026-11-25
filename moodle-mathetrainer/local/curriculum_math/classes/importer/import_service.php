@@ -1,4 +1,13 @@
 <?php
+// This file is part of the Moodle plugin local_curriculum_math.
+
+/**
+ * Import service for curriculum packs.
+ *
+ * @package    local_curriculum_math
+ * @license    MIT
+ */
+
 declare(strict_types=1);
 
 namespace local_curriculum_math\importer;
@@ -10,12 +19,26 @@ use stdClass;
  * updates the existing records instead of failing on the unique index.
  */
 final class import_service {
+    /**
+     * Creates the import service.
+     *
+     * @param pack_reader $reader Reads pack files
+     * @param validator $validator Validates decoded packs
+     */
     public function __construct(
+        /** @var pack_reader Reads pack files */
         private readonly pack_reader $reader,
+        /** @var validator Validates decoded packs */
         private readonly validator $validator,
     ) {
     }
 
+    /**
+     * Imports one pack file (framework, competencies, template links and KMK mappings) in a transaction.
+     *
+     * @param string $filepath Path to the pack file
+     * @return int Id of the curriculum_framework record
+     */
     public function import_path(string $filepath): int {
         global $DB;
 
@@ -80,8 +103,12 @@ final class import_service {
 
                 if (!empty($framework['kmk_framework'])) {
                     $targets = is_array($kmk['maps_to'] ?? null) ? $kmk['maps_to'] : [];
-                    $this->replace_mappings((string)$framework['id'], $comp->competencyid,
-                        (string)$framework['kmk_framework'], $targets);
+                    $this->replace_mappings(
+                        (string)$framework['id'],
+                        $comp->competencyid,
+                        (string)$framework['kmk_framework'],
+                        $targets
+                    );
                 }
             }
         }

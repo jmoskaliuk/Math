@@ -19,10 +19,16 @@ namespace mod_mathetrainer\validator;
 
 use mod_mathetrainer\local\fraction;
 
+/**
+ * Checks learner responses and assigns an error category.
+ */
 final class answer_validator {
     /**
+     * Checks a response against the expected answer of an item.
+     *
      * @param array<string, mixed> $payload
      * @param array<string, mixed> $expected
+     * @param string $response Learner response
      * @return array{correct: bool, category: ?string, hint: ?string, normalised: ?string}
      */
     public function check(array $payload, array $expected, string $response): array {
@@ -68,6 +74,12 @@ final class answer_validator {
     }
 
     /**
+     * Builds a check result.
+     *
+     * @param bool $correct Whether the response is correct
+     * @param string|null $category Error category, null if correct
+     * @param string|null $hint Additional hint (e.g. "notreduced")
+     * @param string|null $normalised Canonical form of the response
      * @return array{correct: bool, category: ?string, hint: ?string, normalised: ?string}
      */
     private static function result(bool $correct, ?string $category, ?string $hint = null, ?string $normalised = null): array {

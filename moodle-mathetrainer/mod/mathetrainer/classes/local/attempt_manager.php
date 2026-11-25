@@ -19,18 +19,38 @@ use mod_mathetrainer\validator\answer_validator;
 use moodle_database;
 use stdClass;
 
+/**
+ * Starts, loads and submits the attempts (rounds of exercises) of an activity.
+ */
 final class attempt_manager {
+    /** @var int Number of items in one attempt */
     public const ITEMS_PER_ATTEMPT = 5;
 
+    /** @var string Status of an attempt that has not been submitted */
     public const STATUS_INPROGRESS = 'inprogress';
+    /** @var string Status of a submitted attempt */
     public const STATUS_FINISHED = 'finished';
 
+    /**
+     * Creates the attempt manager for an activity.
+     *
+     * @param moodle_database $db Database
+     * @param stdClass $instance Activity record
+     */
     public function __construct(
+        /** @var moodle_database Database */
         private readonly moodle_database $db,
+        /** @var stdClass Activity record */
         private readonly stdClass $instance,
     ) {
     }
 
+    /**
+     * Latest attempt of the user that is still in progress.
+     *
+     * @param int $userid Id of the user
+     * @return stdClass|null null if there is none
+     */
     public function get_inprogress_attempt(int $userid): ?stdClass {
         $records = $this->db->get_records('mathetrainer_attempts', [
             'mathetrainerid' => $this->instance->id,
@@ -40,6 +60,13 @@ final class attempt_manager {
         return $records ? reset($records) : null;
     }
 
+    /**
+     * Attempt of the user in this activity.
+     *
+     * @param int $attemptid Id of the attempt
+     * @param int $userid Id of the user
+     * @return stdClass|null null if it does not exist or belongs to someone else
+     */
     public function get_attempt(int $attemptid, int $userid): ?stdClass {
         return $this->db->get_record('mathetrainer_attempts', [
             'id' => $attemptid,
@@ -49,6 +76,9 @@ final class attempt_manager {
     }
 
     /**
+     * Finished attempts of the user.
+     *
+     * @param int $userid Id of the user
      * @return stdClass[] finished attempts of the user, newest first
      */
     public function get_finished_attempts(int $userid): array {
@@ -149,6 +179,9 @@ final class attempt_manager {
     }
 
     /**
+     * Items of an attempt.
+     *
+     * @param int $attemptid Id of the attempt
      * @return stdClass[] items of an attempt keyed by slot, with decoded payload/expected
      */
     public function get_items(int $attemptid): array {
@@ -162,6 +195,9 @@ final class attempt_manager {
     }
 
     /**
+     * Responses of an attempt.
+     *
+     * @param int $attemptid Id of the attempt
      * @return array<int, stdClass> responses of an attempt keyed by slot
      */
     public function get_responses(int $attemptid): array {

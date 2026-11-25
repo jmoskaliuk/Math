@@ -10,7 +10,6 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
-require_once($CFG->dirroot . '/user/lib.php');
 
 use mod_mathetrainer\local\attempt_manager;
 
@@ -50,6 +49,7 @@ if ($action !== '' && $canattempt) {
                 $answers[$slot] = optional_param('answer_' . $slot, '', PARAM_RAW_TRIMMED);
             }
             $manager->submit($attempt, $answers);
+            mathetrainer_update_grades($instance, (int)$USER->id);
             redirect(new moodle_url($pageurl, ['attempt' => $attempt->id]));
         }
         redirect($pageurl);
@@ -63,9 +63,7 @@ if ($action !== '' && $canattempt) {
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-/**
- * Renders the prompt of an item.
- */
+// Renders the prompt of an item.
 $renderprompt = static function (stdClass $item): string {
     $payload = $item->payload;
     $key = (string)($payload['promptkey'] ?? 'prompt_calculate');
@@ -79,9 +77,7 @@ $renderprompt = static function (stdClass $item): string {
     return $text;
 };
 
-/**
- * Readable feedback for a validation result.
- */
+// Readable feedback for a validation result.
 $renderfeedback = static function (array $result, array $expected): string {
     if (!empty($result['correct'])) {
         $text = get_string('feedback_correct', 'mathetrainer');
@@ -122,16 +118,24 @@ if ($canattempt) {
             echo html_writer::start_div('card mb-3');
             echo html_writer::start_div('card-body');
             $promptid = 'mathetrainer_prompt_' . $slot;
-            echo html_writer::div(get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
-                'font-weight-bold mb-2', ['id' => $promptid]);
+            echo html_writer::div(
+                get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
+                'font-weight-bold mb-2',
+                ['id' => $promptid]
+            );
 
             if (($item->payload['type'] ?? '') === 'choice') {
                 $options = ['' => get_string('choose')];
                 foreach ((array)$item->payload['options'] as $option) {
                     $options[$option] = $option;
                 }
-                echo html_writer::select($options, 'answer_' . $slot, '', false,
-                    ['id' => $fieldid, 'class' => 'custom-select', 'aria-labelledby' => $promptid]);
+                echo html_writer::select(
+                    $options,
+                    'answer_' . $slot,
+                    '',
+                    false,
+                    ['id' => $fieldid, 'class' => 'custom-select', 'aria-labelledby' => $promptid]
+                );
             } else {
                 echo html_writer::empty_tag('input', [
                     'type' => 'text',
@@ -155,7 +159,6 @@ if ($canattempt) {
             'value' => get_string('submitanswers', 'mathetrainer'),
         ]);
         echo html_writer::end_tag('form');
-
     } else {
         if ($review && $review->status === attempt_manager::STATUS_FINISHED) {
             // Feedback for the attempt just finished (or selected).
@@ -169,6 +172,11 @@ if ($canattempt) {
                 $correct === count($items) ? 'success' : 'info'
             );
 
+            $own = (new \mod_mathetrainer\local\report_data($DB, $instance))->rows([$USER->id => $USER]);
+            if ($own) {
+                echo $OUTPUT->notification(mathetrainer_recommendation_text($own[0]->recommendation, true), 'info', false);
+            }
+
             foreach ($items as $slot => $item) {
                 $response = $responses[$slot] ?? null;
                 $result = $response ? (array)$response->result : ['correct' => false, 'category' => 'empty'];
@@ -177,8 +185,10 @@ if ($canattempt) {
 
                 echo html_writer::start_div("card mb-3 $class");
                 echo html_writer::start_div('card-body');
-                echo html_writer::div(get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
-                    'font-weight-bold');
+                echo html_writer::div(
+                    get_string('exerciseno', 'mathetrainer', $slot) . ': ' . $renderprompt($item),
+                    'font-weight-bold'
+                );
                 echo html_writer::div(get_string('youranswer', 'mathetrainer', $given === '' ? '–' : s($given)));
                 echo html_writer::div($renderfeedback($result, $item->expected), 'mt-1');
                 echo html_writer::end_div();
@@ -216,37 +226,29 @@ if (has_capability('mod/mathetrainer:viewreports', $context)) {
     if (!$rows) {
         echo $OUTPUT->notification(get_string('noattemptsyet', 'mathetrainer'), 'info');
     } else {
-        $users = user_get_users_by_id(array_keys($rows));
-        $table = new html_table();
-        $table->head = [
-            get_string('fullname'),
-            get_string('attempts', 'mathetrainer'),
-            get_string('averagescore', 'mathetrainer'),
-            get_string('lastattempt', 'mathetrainer'),
-        ];
-        foreach ($rows as $userid => $row) {
-            $table->data[] = [
-                isset($users[$userid]) ? fullname($users[$userid]) : '#' . (int)$userid,
-                (int)$row->attempts,
-                format_float((float)$row->avgscore * 100, 0) . ' %',
-                userdate((int)$row->lastattempt),
-            ];
-        }
-        echo html_writer::table($table);
-
         $errors = $manager->get_error_statistics();
+        echo html_writer::tag('p', get_string('reportsummary', 'mathetrainer', (object)[
+            'learners' => count($rows),
+            'attempts' => array_sum(array_map(static fn($r) => (int)$r->attempts, $rows)),
+            'average' => format_float(array_sum(array_map(static fn($r) => (float)$r->avgscore, $rows)) / count($rows) * 100, 0),
+        ]));
         if ($errors) {
-            echo $OUTPUT->heading(get_string('commonerrors', 'mathetrainer'), 4);
             $list = [];
             $strings = get_string_manager();
-            foreach ($errors as $category => $count) {
+            foreach (array_slice($errors, 0, 3, true) as $category => $count) {
                 $key = 'errorname_' . $category;
                 $label = $strings->string_exists($key, 'mathetrainer') ? get_string($key, 'mathetrainer') : s($category);
                 $list[] = $label . ': ' . $count;
             }
+            echo html_writer::tag('p', get_string('commonerrors', 'mathetrainer') . ':', ['class' => 'mb-1']);
             echo html_writer::alist($list);
         }
     }
+    echo $OUTPUT->single_button(
+        new moodle_url('/mod/mathetrainer/report.php', ['id' => $cm->id]),
+        get_string('openreport', 'mathetrainer'),
+        'get'
+    );
 }
 
 if (!$canattempt && !has_capability('mod/mathetrainer:viewreports', $context)) {

@@ -25,8 +25,14 @@ declare(strict_types=1);
 
 namespace mod_mathetrainer\generator;
 
+/**
+ * Deterministic generator for one kind of exercise.
+ */
 interface exercise_generator {
     /**
+     * Generates the exercise for a seed; the same seed always gives the same exercise.
+     *
+     * @param int $seed Seed for the random number generator
      * @return array{payload: array<string, mixed>, expected: array{answer: string, diagnostics: array<string, string>}}
      */
     public function generate(int $seed): array;

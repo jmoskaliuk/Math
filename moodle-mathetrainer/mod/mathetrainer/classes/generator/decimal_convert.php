@@ -23,9 +23,19 @@ namespace mod_mathetrainer\generator;
 use mod_mathetrainer\local\fraction;
 use mod_mathetrainer\local\random;
 
+/**
+ * Generator for fraction/decimal conversion exercises.
+ */
 final class decimal_convert implements exercise_generator {
+    /** @var int[] Denominators that give terminating decimals */
     private const DENOMINATORS = [2, 4, 5, 8, 10, 20, 25, 50, 100];
 
+    /**
+     * Generates a fraction-to-decimal or decimal-to-fraction exercise.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
 

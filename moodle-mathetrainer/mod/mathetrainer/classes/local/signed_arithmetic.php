@@ -15,12 +15,26 @@ declare(strict_types=1);
 
 namespace mod_mathetrainer\local;
 
+/**
+ * A signed addition or subtraction a ± b with its result and typical wrong results.
+ */
 final class signed_arithmetic {
+    /** @var fraction Correct result */
     public readonly fraction $result;
 
+    /**
+     * Creates the task and computes its result.
+     *
+     * @param fraction $a First operand
+     * @param fraction $b Second operand
+     * @param bool $subtract True for a - b, false for a + b
+     */
     public function __construct(
+        /** @var fraction First operand */
         public readonly fraction $a,
+        /** @var fraction Second operand */
         public readonly fraction $b,
+        /** @var bool True for a - b, false for a + b */
         public readonly bool $subtract,
     ) {
         $this->result = $subtract ? $a->subtract($b) : $a->add($b);
@@ -36,7 +50,7 @@ final class signed_arithmetic {
         $b = $this->b;
         $diagnostics = [];
 
-        // "Minus minus" treated as minus: a - (-b) computed as a - |b|.
+        // Double negative ("minus minus") treated as minus: a - (-b) computed as a - |b|.
         if ($this->subtract && $b->numerator < 0) {
             $this->add($diagnostics, $a->add($b), 'double_negative');
         }
@@ -51,8 +65,11 @@ final class signed_arithmetic {
 
         // Fractions: numerators and denominators added separately.
         if (!$a->is_integer() || !$b->is_integer()) {
-            $this->add($diagnostics, new fraction($a->numerator + $c->numerator, $a->denominator + $c->denominator),
-                'added_denominators');
+            $this->add(
+                $diagnostics,
+                new fraction($a->numerator + $c->numerator, $a->denominator + $c->denominator),
+                'added_denominators'
+            );
         }
 
         if (!$this->result->is_zero()) {
@@ -72,7 +89,11 @@ final class signed_arithmetic {
     }
 
     /**
+     * Adds a wrong result with its category unless it equals the correct result or is already listed.
+     *
      * @param array<string, string> $diagnostics
+     * @param fraction $wrong Wrong result
+     * @param string $category Error category
      */
     private function add(array &$diagnostics, fraction $wrong, string $category): void {
         if ($wrong->equals($this->result)) {
@@ -84,6 +105,13 @@ final class signed_arithmetic {
         }
     }
 
+    /**
+     * Display form of an operand, negative numbers in brackets if requested.
+     *
+     * @param fraction $value Operand
+     * @param bool $bracketnegative Put negative values in brackets
+     * @return string
+     */
     private static function operand(fraction $value, bool $bracketnegative): string {
         $text = $value->display();
         return ($bracketnegative && $value->numerator < 0) ? '(' . $text . ')' : $text;

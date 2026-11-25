@@ -12,10 +12,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/mathetrainer/backup/moodle2/backup_mathetrainer_stepslib.php');
 
+/**
+ * Backup task that adds the mathetrainer structure step.
+ */
 class backup_mathetrainer_activity_task extends backup_activity_task {
+    /**
+     * No activity-specific backup settings.
+     */
     protected function define_my_settings() {
     }
 
+    /**
+     * Adds the structure step that writes mathetrainer.xml.
+     */
     protected function define_my_steps() {
         $this->add_step(new backup_mathetrainer_activity_structure_step('mathetrainer_structure', 'mathetrainer.xml'));
     }
@@ -29,10 +38,16 @@ class backup_mathetrainer_activity_task extends backup_activity_task {
     public static function encode_content_links($content) {
         global $CFG;
         $base = preg_quote($CFG->wwwroot, '/');
-        $content = preg_replace('/(' . $base . '\/mod\/mathetrainer\/index.php\?id\=)([0-9]+)/',
-            '$@MATHETRAINERINDEX*$2@$', $content);
-        $content = preg_replace('/(' . $base . '\/mod\/mathetrainer\/view.php\?id\=)([0-9]+)/',
-            '$@MATHETRAINERVIEWBYID*$2@$', $content);
+        $content = preg_replace(
+            '/(' . $base . '\/mod\/mathetrainer\/index.php\?id\=)([0-9]+)/',
+            '$@MATHETRAINERINDEX*$2@$',
+            $content
+        );
+        $content = preg_replace(
+            '/(' . $base . '\/mod\/mathetrainer\/view.php\?id\=)([0-9]+)/',
+            '$@MATHETRAINERVIEWBYID*$2@$',
+            $content
+        );
         return $content;
     }
 }

@@ -91,8 +91,10 @@ final class generator_test extends \basic_testcase {
         $this->assertSame(['order_of_operations'], registry::find('Natürliche Zahlen', 5));
         $this->assertSame(['decimal_convert'], registry::find('Dezimalzahlen', 6));
         $this->assertSame(['fraction_numberline', 'fraction_compare'], registry::find('Brüche', 6));
-        $this->assertSame(['integer_numberline', 'rational_addition', 'sign_error_analysis'],
-            registry::find('Rationale Zahlen', 7));
+        $this->assertSame(
+            ['integer_numberline', 'rational_addition', 'sign_error_analysis'],
+            registry::find('Rationale Zahlen', 7)
+        );
         // Requirement level narrows the selection.
         $this->assertSame(['sign_error_analysis'], registry::find('Rationale Zahlen', 7, 'AFB III'));
         $this->assertSame(['integer_numberline', 'rational_addition'], registry::find('Rationale Zahlen', 7, 'AFB I'));
@@ -106,8 +108,10 @@ final class generator_test extends \basic_testcase {
 
     public function test_registry_find_with_curriculum_templates(): void {
         // Templates from the curriculum override topic and grade, unknown ids are ignored.
-        $this->assertSame(['fraction_numberline', 'fraction_compare'],
-            registry::find('Rationale Zahlen', 9, null, ['fraction_compare', 'fraction_numberline', 'unknown']));
+        $this->assertSame(
+            ['fraction_numberline', 'fraction_compare'],
+            registry::find('Rationale Zahlen', 9, null, ['fraction_compare', 'fraction_numberline', 'unknown'])
+        );
         // Only unknown ids: fall back to the normal selection.
         $this->assertSame(['linear_equation'], registry::find('Gleichungen', 7, null, ['unknown']));
     }
@@ -238,7 +242,9 @@ final class generator_test extends \basic_testcase {
             $expression = str_replace("\u{2212}", '-', $exercise['payload']['expression']);
             $this->assertMatchesRegularExpression('/^(-?\d*)x ([+-]) (\d+) = (-?\d+)$/', $expression);
             preg_match('/^(-?\d*)x ([+-]) (\d+) = (-?\d+)$/', $expression, $m);
-            $a = match ($m[1]) { '' => 1, '-' => -1, default => (int)$m[1] };
+            $a = match ($m[1]) {
+                '' => 1, '-' => -1, default => (int)$m[1]
+            };
             $b = $m[2] === '+' ? (int)$m[3] : -(int)$m[3];
             $x = (int)$exercise['expected']['answer'];
             $this->assertSame((int)$m[4], $a * $x + $b, "seed $seed: $expression");

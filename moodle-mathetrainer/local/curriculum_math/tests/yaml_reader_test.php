@@ -84,6 +84,9 @@ final class yaml_reader_test extends \basic_testcase {
     }
 
     /**
+     * Unsupported YAML features are rejected with an exception.
+     *
+     * @param string $yaml YAML source
      * @dataProvider unsupported_provider
      */
     public function test_rejects_unsupported(string $yaml): void {
@@ -91,6 +94,11 @@ final class yaml_reader_test extends \basic_testcase {
         (new yaml_reader())->parse($yaml);
     }
 
+    /**
+     * YAML snippets that must be rejected.
+     *
+     * @return array
+     */
     public static function unsupported_provider(): array {
         return [
             'block scalar' => ["a: |\n  text"],

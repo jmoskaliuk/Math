@@ -19,9 +19,19 @@ namespace mod_mathetrainer\generator;
 use mod_mathetrainer\local\fraction;
 use mod_mathetrainer\local\random;
 
+/**
+ * Generator for exercises comparing two fractions.
+ */
 final class fraction_compare implements exercise_generator {
+    /** @var string[] Answer options offered to the learner */
     public const OPTIONS = ['<', '=', '>'];
 
+    /**
+     * Generates a comparison of two fractions with diagnostics for typical misconceptions.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
         $variant = $rng->int(1, 5);
@@ -90,6 +100,12 @@ final class fraction_compare implements exercise_generator {
         ];
     }
 
+    /**
+     * Comparison symbol for the result of the spaceship operator.
+     *
+     * @param int $comparison -1, 0 or 1
+     * @return string "<", "=" or ">"
+     */
     private static function symbol(int $comparison): string {
         return match ($comparison) {
             -1 => '<',

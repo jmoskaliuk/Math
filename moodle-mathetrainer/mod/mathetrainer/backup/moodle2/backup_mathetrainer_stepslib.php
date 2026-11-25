@@ -12,15 +12,21 @@
  * @license    MIT
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Structure step that defines the backup tree of an activity.
+ */
 class backup_mathetrainer_activity_structure_step extends backup_activity_structure_step {
+    /**
+     * Defines the backup structure (with user data only when included).
+     *
+     * @return backup_nested_element
+     */
     protected function define_structure() {
         $userinfo = $this->get_setting_value('userinfo');
 
         $mathetrainer = new backup_nested_element('mathetrainer', ['id'], [
             'name', 'intro', 'introformat', 'state', 'schoolform', 'gradelevel', 'topic',
-            'competencyid', 'requirementlevel', 'timecreated', 'timemodified',
+            'competencyid', 'requirementlevel', 'grade', 'grademethod', 'timecreated', 'timemodified',
         ]);
 
         $attempts = new backup_nested_element('attempts');
@@ -61,6 +67,7 @@ class backup_mathetrainer_activity_structure_step extends backup_activity_struct
             $masteryrecord->set_source_table('mathetrainer_mastery', ['mathetrainerid' => backup::VAR_PARENTID], 'id ASC');
         }
 
+        $mathetrainer->annotate_ids('scale', 'grade');
         $attempt->annotate_ids('user', 'userid');
         $response->annotate_ids('user', 'userid');
         $masteryrecord->annotate_ids('user', 'userid');

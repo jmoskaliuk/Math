@@ -12,10 +12,21 @@ declare(strict_types=1);
 
 namespace mod_mathetrainer\local;
 
+/**
+ * Exact rational number in lowest terms with a positive denominator.
+ */
 final class fraction {
+    /** @var int Numerator (carries the sign) */
     public readonly int $numerator;
+    /** @var int Denominator, always positive */
     public readonly int $denominator;
 
+    /**
+     * Creates a fraction and reduces it to lowest terms.
+     *
+     * @param int $numerator Numerator
+     * @param int $denominator Denominator, must not be zero
+     */
     public function __construct(int $numerator, int $denominator = 1) {
         if ($denominator === 0) {
             throw new \coding_exception('Denominator must not be zero.');
@@ -29,6 +40,13 @@ final class fraction {
         $this->denominator = intdiv($denominator, $gcd);
     }
 
+    /**
+     * Greatest common divisor; 1 if both numbers are zero.
+     *
+     * @param int $a First number
+     * @param int $b Second number
+     * @return int
+     */
     public static function gcd(int $a, int $b): int {
         while ($b !== 0) {
             [$a, $b] = [$b, $a % $b];
@@ -76,6 +94,12 @@ final class fraction {
         return self::gcd((int)$m[1], (int)$m[2]) > 1;
     }
 
+    /**
+     * Sum of this and another fraction.
+     *
+     * @param self $other Fraction to add
+     * @return self
+     */
     public function add(self $other): self {
         return new self(
             $this->numerator * $other->denominator + $other->numerator * $this->denominator,
@@ -83,33 +107,68 @@ final class fraction {
         );
     }
 
+    /**
+     * Fraction with the opposite sign.
+     *
+     * @return self
+     */
     public function negate(): self {
         return new self(-$this->numerator, $this->denominator);
     }
 
+    /**
+     * Difference of this and another fraction.
+     *
+     * @param self $other Fraction to subtract
+     * @return self
+     */
     public function subtract(self $other): self {
         return $this->add($other->negate());
     }
 
+    /**
+     * Absolute value.
+     *
+     * @return self
+     */
     public function abs(): self {
         return new self(abs($this->numerator), $this->denominator);
     }
 
     /**
+     * Compares this fraction with another one.
+     *
+     * @param self $other Fraction to compare with
      * @return int -1, 0 or 1
      */
     public function compare(self $other): int {
         return ($this->numerator * $other->denominator) <=> ($other->numerator * $this->denominator);
     }
 
+    /**
+     * Whether both fractions have the same value.
+     *
+     * @param self $other Fraction to compare with
+     * @return bool
+     */
     public function equals(self $other): bool {
         return $this->compare($other) === 0;
     }
 
+    /**
+     * Whether the value is zero.
+     *
+     * @return bool
+     */
     public function is_zero(): bool {
         return $this->numerator === 0;
     }
 
+    /**
+     * Whether the value is an integer.
+     *
+     * @return bool
+     */
     public function is_integer(): bool {
         return $this->denominator === 1;
     }

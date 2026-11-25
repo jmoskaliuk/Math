@@ -151,3 +151,97 @@ $string['privacy:metadata:mastery:competencyid'] = 'The competency or topic.';
 $string['privacy:metadata:mastery:mastery'] = 'Average share of correct answers.';
 $string['privacy:metadata:mastery:attemptcount'] = 'Number of rounds taken into account.';
 $string['privacy:metadata:mastery:timemodified'] = 'Last update.';
+
+// Grading.
+$string['grademethod'] = 'Grading method';
+$string['grademethod_help'] = 'How the gradebook grade is calculated from several rounds.';
+$string['grademethod_highest'] = 'Highest round';
+$string['grademethod_average'] = 'Average of all rounds';
+$string['grademethod_first'] = 'First round';
+$string['grademethod_last'] = 'Last round';
+
+// School form.
+$string['schoolform'] = 'School type';
+$string['schoolform_help'] = 'Optional. Used to classify the activity and for reports; it does not affect which exercises are generated.';
+$string['schoolform_gymnasium'] = 'Gymnasium';
+$string['schoolform_realschule'] = 'Realschule';
+$string['schoolform_gesamtschule'] = 'Gesamtschule';
+$string['schoolform_sekundarschule'] = 'Sekundarschule';
+$string['schoolform_gemeinschaftsschule'] = 'Gemeinschaftsschule';
+$string['schoolform_hauptschule'] = 'Hauptschule';
+
+// Exercise types.
+$string['template_order_of_operations'] = 'Order of operations';
+$string['template_decimal_convert'] = 'Fraction ↔ decimal';
+$string['template_fraction_numberline'] = 'Fraction on the number line';
+$string['template_fraction_compare'] = 'Comparing fractions';
+$string['template_integer_numberline'] = 'Integer on the number line';
+$string['template_rational_addition'] = 'Calculating with rational numbers';
+$string['template_sign_error_analysis'] = 'Find the mistake';
+$string['template_linear_equation'] = 'Linear equations';
+
+// Report.
+$string['report'] = 'Report';
+$string['openreport'] = 'Open detailed report';
+$string['reportsummary'] = '{$a->learners} learners, {$a->attempts} rounds, on average {$a->average} % correct.';
+$string['classoverview'] = 'Class overview by exercise type';
+$string['learneroverview'] = 'Learners';
+$string['exercisetype'] = 'Exercise type';
+$string['answers'] = 'Answers';
+$string['successrate'] = 'Correct';
+$string['aggregatedscore'] = 'Grade';
+$string['recommendation'] = 'Recommendation';
+$string['downloadreport'] = 'Download report';
+$string['nolearners'] = 'There are no learners in this group.';
+$string['recommendationrules'] = 'Recommendations: "repeat" from at least 3 answers with less than 60 % correct; "typical mistake" if one mistake occurs at least twice and in at least a third of the wrong answers; "secure" from 80 % correct with at least 5 answers.';
+$string['rec_notstarted'] = 'Not started yet.';
+$string['rec_mastered'] = 'Secure – can continue with more demanding exercises (AFB II/III).';
+$string['rec_ontrack'] = 'On track.';
+$string['rec_repeat'] = 'Repeat: {$a}.';
+$string['rec_focus'] = 'Typical mistake: {$a}.';
+$string['learnerrec_notstarted'] = 'Start your first round!';
+$string['learnerrec_mastered'] = 'Great, you have got it! Try more difficult exercises.';
+$string['learnerrec_ontrack'] = 'You are on a good track.';
+$string['learnerrec_repeat'] = 'Practise again: {$a}.';
+$string['learnerrec_focus'] = 'Pay special attention to: {$a}.';
+// Bloom packages.
+$string['mathetrainer:exportpackage'] = 'Create a Bloom learning package';
+$string['bloompackage'] = 'Bloom learning package';
+$string['bloompackage_intro'] = 'Creates a Bloom learning package from the exercise types of this activity: introduction with key points, exercises with feedback on typical mistakes and a result slide. You can adapt the package in Bloom and add it back to Moodle as SCORM.';
+$string['exercisetypes'] = 'Exercise types';
+$string['bloomcount'] = 'Number of exercises';
+$string['bloomstyle'] = 'Exercise format';
+$string['bloomstyle_mixed'] = 'Mixed: input and multiple choice';
+$string['bloomstyle_mc'] = 'Multiple choice with typical mistakes as options';
+$string['bloomstyle_input'] = 'Input only';
+$string['bloomseed'] = 'Variant (seed)';
+$string['bloomseed_help'] = 'Leave empty for new numbers. Same number = same package; e.g. use another number for parallel classes.';
+$string['bloomdownload'] = 'Download package (JSON)';
+$string['bloomprivacy'] = 'The package only contains exercises and explanations, no learner data.';
+$string['bloom_intro_title'] = 'Let\'s go';
+$string['bloom_intro_body'] = 'In this package you practise the following exercises. Read the key points and then work step by step.';
+$string['bloom_intro_tip'] = 'If you make a mistake, read the feedback carefully – it explains where the mistake usually is.';
+$string['bloom_result_title'] = 'Your result';
+$string['bloom_result_pass'] = 'Great! You solved the exercises confidently.';
+$string['bloom_result_fail'] = 'Not quite yet. Read the feedback and try again.';
+$string['bloom_description'] = 'Practice package with {$a} exercises from the maths trainer.';
+$string['bloom_audience'] = 'Lower secondary students.';
+$string['bloom_audience_grade'] = 'Students in grade {$a}.';
+$string['bloom_competency_note'] = 'Curriculum reference: {$a}. Created with the maths trainer.';
+$string['keypoint_order_of_operations'] = 'Brackets first, then multiplication and division before addition and subtraction, otherwise left to right.';
+$string['keypoint_decimal_convert'] = 'Expand the fraction to 10, 100 or 1000 – then you can read off the decimal.';
+$string['keypoint_fraction_numberline'] = 'The denominator tells you into how many equal parts the piece from 0 to 1 is divided.';
+$string['keypoint_fraction_compare'] = 'Same numerator: larger denominator, smaller fraction. Otherwise use a common denominator.';
+$string['keypoint_integer_numberline'] = 'First find out what one tick stands for. Negative numbers are left of 0.';
+$string['keypoint_rational_addition'] = 'Subtracting a negative number means adding its absolute value. With different signs, subtract the absolute values.';
+$string['keypoint_sign_error_analysis'] = 'Check the sign first, then the absolute value.';
+$string['keypoint_linear_equation'] = 'Do the same on both sides using the inverse operation: + becomes −, · becomes :.';
+$string['goal_order_of_operations'] = 'Calculate terms with natural numbers using brackets and the order of operations.';
+$string['goal_decimal_convert'] = 'Convert between fractions and decimals.';
+$string['goal_fraction_numberline'] = 'Read off fractions on the number line.';
+$string['goal_fraction_compare'] = 'Compare fractions by size.';
+$string['goal_integer_numberline'] = 'Read off integers on the number line and work out the scale.';
+$string['goal_rational_addition'] = 'Add and subtract rational numbers.';
+$string['goal_sign_error_analysis'] = 'Find and explain mistakes in calculations with negative numbers.';
+$string['goal_linear_equation'] = 'Solve linear equations by equivalent transformations.';
+$string['bloompackagelink'] = 'Create Bloom learning package';

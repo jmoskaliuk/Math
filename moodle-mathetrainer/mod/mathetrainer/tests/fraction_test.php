@@ -27,6 +27,10 @@ final class fraction_test extends \basic_testcase {
     }
 
     /**
+     * Learner input is parsed to the expected fraction or rejected (null).
+     *
+     * @param string $input Learner input
+     * @param string|null $expected Expected fraction or null
      * @dataProvider parse_provider
      */
     public function test_parse(string $input, ?string $expected): void {
@@ -34,6 +38,11 @@ final class fraction_test extends \basic_testcase {
         $this->assertSame($expected, $parsed === null ? null : (string)$parsed);
     }
 
+    /**
+     * Inputs and expected parse results.
+     *
+     * @return array
+     */
     public static function parse_provider(): array {
         return [
             'integer' => ['-7', '-7'],

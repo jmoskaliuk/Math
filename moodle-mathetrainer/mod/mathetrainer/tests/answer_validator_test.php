@@ -13,7 +13,9 @@ use mod_mathetrainer\validator\answer_validator;
  * @license    MIT
  */
 final class answer_validator_test extends \basic_testcase {
+    /** @var array Payload of a numeric item */
     private const NUMERIC = ['type' => 'numeric', 'promptkey' => 'prompt_calculate', 'expression' => '−7 + 3'];
+    /** @var array Expected answer with diagnostics for wrong answers */
     private const EXPECTED = ['answer' => '-4', 'diagnostics' => ['4' => 'sign_error', '-10' => 'magnitude_error']];
 
     public function test_numeric_correct_in_any_notation(): void {

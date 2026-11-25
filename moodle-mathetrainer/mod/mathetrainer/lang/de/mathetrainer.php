@@ -151,3 +151,97 @@ $string['privacy:metadata:mastery:competencyid'] = 'Die Kompetenz bzw. das Thema
 $string['privacy:metadata:mastery:mastery'] = 'Durchschnittlicher Anteil richtiger Antworten.';
 $string['privacy:metadata:mastery:attemptcount'] = 'Anzahl der berücksichtigten Durchgänge.';
 $string['privacy:metadata:mastery:timemodified'] = 'Letzte Aktualisierung.';
+
+// Grading.
+$string['grademethod'] = 'Bewertungsmethode';
+$string['grademethod_help'] = 'Legt fest, wie aus mehreren Durchgängen die Note im Gradebook berechnet wird.';
+$string['grademethod_highest'] = 'Bester Durchgang';
+$string['grademethod_average'] = 'Durchschnitt aller Durchgänge';
+$string['grademethod_first'] = 'Erster Durchgang';
+$string['grademethod_last'] = 'Letzter Durchgang';
+
+// School form.
+$string['schoolform'] = 'Schulform';
+$string['schoolform_help'] = 'Optional. Dient der Einordnung der Aktivität und der Auswertung; die Aufgabenauswahl hängt davon nicht ab.';
+$string['schoolform_gymnasium'] = 'Gymnasium';
+$string['schoolform_realschule'] = 'Realschule';
+$string['schoolform_gesamtschule'] = 'Gesamtschule';
+$string['schoolform_sekundarschule'] = 'Sekundarschule';
+$string['schoolform_gemeinschaftsschule'] = 'Gemeinschaftsschule';
+$string['schoolform_hauptschule'] = 'Hauptschule';
+
+// Exercise types.
+$string['template_order_of_operations'] = 'Rechenregeln';
+$string['template_decimal_convert'] = 'Bruch ↔ Dezimalzahl';
+$string['template_fraction_numberline'] = 'Bruch am Zahlenstrahl';
+$string['template_fraction_compare'] = 'Brüche vergleichen';
+$string['template_integer_numberline'] = 'Ganze Zahl am Zahlenstrahl';
+$string['template_rational_addition'] = 'Rechnen mit rationalen Zahlen';
+$string['template_sign_error_analysis'] = 'Fehler finden';
+$string['template_linear_equation'] = 'Lineare Gleichungen';
+
+// Report.
+$string['report'] = 'Bericht';
+$string['openreport'] = 'Ausführlichen Bericht öffnen';
+$string['reportsummary'] = '{$a->learners} Lernende, {$a->attempts} Durchgänge, durchschnittlich {$a->average} % richtig.';
+$string['classoverview'] = 'Klassenübersicht nach Aufgabentyp';
+$string['learneroverview'] = 'Lernende';
+$string['exercisetype'] = 'Aufgabentyp';
+$string['answers'] = 'Antworten';
+$string['successrate'] = 'Richtig';
+$string['aggregatedscore'] = 'Bewertung';
+$string['recommendation'] = 'Empfehlung';
+$string['downloadreport'] = 'Bericht herunterladen';
+$string['nolearners'] = 'In dieser Gruppe gibt es keine Lernenden.';
+$string['recommendationrules'] = 'Empfehlungen: „Wiederholen“ ab mindestens 3 Antworten mit weniger als 60 % richtig; „Typischer Fehler“, wenn ein Fehler mindestens zweimal und bei mindestens einem Drittel der falschen Antworten auftritt; „Sicher“ ab 80 % richtig bei mindestens 5 Antworten.';
+$string['rec_notstarted'] = 'Noch nicht begonnen.';
+$string['rec_mastered'] = 'Sicher – kann mit anspruchsvolleren Aufgaben (AFB II/III) weitermachen.';
+$string['rec_ontrack'] = 'Auf gutem Weg.';
+$string['rec_repeat'] = 'Wiederholen: {$a}.';
+$string['rec_focus'] = 'Typischer Fehler: {$a}.';
+$string['learnerrec_notstarted'] = 'Starte deinen ersten Durchgang!';
+$string['learnerrec_mastered'] = 'Super, das sitzt! Du kannst dich an schwierigere Aufgaben wagen.';
+$string['learnerrec_ontrack'] = 'Du bist auf einem guten Weg.';
+$string['learnerrec_repeat'] = 'Übe noch einmal: {$a}.';
+$string['learnerrec_focus'] = 'Achte besonders auf: {$a}.';
+// Bloom packages.
+$string['mathetrainer:exportpackage'] = 'Bloom-Lernpaket erzeugen';
+$string['bloompackage'] = 'Bloom-Lernpaket';
+$string['bloompackage_intro'] = 'Erzeugt aus den Aufgabentypen dieser Aktivität ein Lernpaket für Bloom: Einstieg mit Merksätzen, Aufgaben mit Rückmeldung zu typischen Fehlern und eine Ergebnis-Folie. In Bloom kannst du das Paket anpassen und als SCORM wieder in Moodle einbinden.';
+$string['exercisetypes'] = 'Aufgabentypen';
+$string['bloomcount'] = 'Anzahl der Aufgaben';
+$string['bloomstyle'] = 'Aufgabenform';
+$string['bloomstyle_mixed'] = 'Gemischt: Eingabe und Multiple Choice';
+$string['bloomstyle_mc'] = 'Multiple Choice mit typischen Fehlern als Antwortoptionen';
+$string['bloomstyle_input'] = 'Nur Eingabe';
+$string['bloomseed'] = 'Variante (Seed)';
+$string['bloomseed_help'] = 'Leer lassen für neue Zahlen. Gleiche Zahl = gleiches Paket, z. B. für Parallelklassen eine andere Zahl wählen.';
+$string['bloomdownload'] = 'Paket herunterladen (JSON)';
+$string['bloomprivacy'] = 'Das Paket enthält nur Aufgaben und Erklärtexte, keine Daten von Lernenden.';
+$string['bloom_intro_title'] = 'Los geht\'s';
+$string['bloom_intro_body'] = 'In diesem Paket übst du die folgenden Aufgaben. Lies dir die Merksätze durch und rechne dann Schritt für Schritt.';
+$string['bloom_intro_tip'] = 'Wenn du dich vertust, lies die Rückmeldung genau – sie erklärt, wo der Fehler meistens steckt.';
+$string['bloom_result_title'] = 'Dein Ergebnis';
+$string['bloom_result_pass'] = 'Stark! Du hast die Aufgaben sicher gelöst.';
+$string['bloom_result_fail'] = 'Noch nicht ganz. Schau dir die Rückmeldungen an und versuche es noch einmal.';
+$string['bloom_description'] = 'Übungspaket mit {$a} Aufgaben aus dem Mathetrainer.';
+$string['bloom_audience'] = 'Schülerinnen und Schüler der Sekundarstufe I.';
+$string['bloom_audience_grade'] = 'Schülerinnen und Schüler der Klasse {$a}.';
+$string['bloom_competency_note'] = 'Lehrplanbezug: {$a}. Erzeugt mit dem Mathetrainer.';
+$string['keypoint_order_of_operations'] = 'Klammern zuerst, dann Punkt vor Strich, sonst von links nach rechts.';
+$string['keypoint_decimal_convert'] = 'Erweitere den Bruch auf 10, 100 oder 1000 – dann kannst du die Dezimalzahl direkt ablesen.';
+$string['keypoint_fraction_numberline'] = 'Der Nenner sagt, in wie viele gleiche Teile das Stück von 0 bis 1 geteilt ist.';
+$string['keypoint_fraction_compare'] = 'Gleicher Zähler: größerer Nenner, kleinerer Bruch. Sonst auf einen gemeinsamen Nenner bringen.';
+$string['keypoint_integer_numberline'] = 'Finde zuerst heraus, wie viel ein Strich bedeutet. Links von 0 liegen die negativen Zahlen.';
+$string['keypoint_rational_addition'] = 'Eine negative Zahl abziehen heißt, ihren Betrag zu addieren. Bei verschiedenen Vorzeichen werden die Beträge subtrahiert.';
+$string['keypoint_sign_error_analysis'] = 'Prüfe zuerst das Vorzeichen, dann den Betrag.';
+$string['keypoint_linear_equation'] = 'Rechne auf beiden Seiten das Gleiche – mit der Gegenrechnung: aus + wird −, aus · wird :.';
+$string['goal_order_of_operations'] = 'Terme mit natürlichen Zahlen unter Beachtung von Klammern und Punkt vor Strich berechnen.';
+$string['goal_decimal_convert'] = 'Zwischen Bruch- und Dezimalschreibweise wechseln.';
+$string['goal_fraction_numberline'] = 'Brüche am Zahlenstrahl ablesen.';
+$string['goal_fraction_compare'] = 'Brüche der Größe nach vergleichen.';
+$string['goal_integer_numberline'] = 'Ganze Zahlen am Zahlenstrahl ablesen und die Skala erschließen.';
+$string['goal_rational_addition'] = 'Rationale Zahlen addieren und subtrahieren.';
+$string['goal_sign_error_analysis'] = 'Fehler in Rechnungen mit negativen Zahlen finden und begründen.';
+$string['goal_linear_equation'] = 'Lineare Gleichungen durch Äquivalenzumformungen lösen.';
+$string['bloompackagelink'] = 'Bloom-Lernpaket erzeugen';

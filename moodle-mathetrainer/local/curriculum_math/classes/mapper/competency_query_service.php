@@ -1,4 +1,13 @@
 <?php
+// This file is part of the Moodle plugin local_curriculum_math.
+
+/**
+ * Read-only competency queries for other plugins.
+ *
+ * @package    local_curriculum_math
+ * @license    MIT
+ */
+
 declare(strict_types=1);
 
 namespace local_curriculum_math\mapper;
@@ -9,10 +18,23 @@ use moodle_database;
  * Read-only queries for other plugins (e.g. mod_mathetrainer).
  */
 final class competency_query_service {
-    public function __construct(private readonly moodle_database $db) {
+    /**
+     * Creates the query service.
+     *
+     * @param moodle_database $db Database to query
+     */
+    public function __construct(
+        /** @var moodle_database Database to query */
+        private readonly moodle_database $db
+    ) {
     }
 
     /**
+     * Competencies of a state, optionally filtered by grade and topic, ordered by competency id.
+     *
+     * @param string $state State whose frameworks are searched
+     * @param int|null $grade Only competencies whose grade range contains this grade
+     * @param string|null $topic Only competencies with this topic
      * @return array<int, \stdClass>
      */
     public function find_by_filters(string $state, ?int $grade = null, ?string $topic = null): array {

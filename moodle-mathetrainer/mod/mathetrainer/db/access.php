@@ -40,6 +40,14 @@ $capabilities = [
             'student' => CAP_ALLOW,
         ],
     ],
+    'mod/mathetrainer:exportpackage' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
     'mod/mathetrainer:viewreports' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',

@@ -12,7 +12,13 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
+/**
+ * Settings form of the activity.
+ */
 class mod_mathetrainer_mod_form extends moodleform_mod {
+    /**
+     * Defines the form elements.
+     */
     public function definition(): void {
         $mform = $this->_form;
 
@@ -26,6 +32,8 @@ class mod_mathetrainer_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         $mform->addElement('header', 'curriculumhdr', get_string('curriculumsettings', 'mathetrainer'));
+        // The core settings of this activity: always show them expanded.
+        $mform->setExpanded('curriculumhdr');
 
         $states = [
             'NRW' => get_string('state_nrw', 'mathetrainer'),
@@ -47,6 +55,13 @@ class mod_mathetrainer_mod_form extends moodleform_mod {
         }
         $mform->addElement('select', 'topic', get_string('topic', 'mathetrainer'), $topics);
         $mform->addHelpButton('topic', 'topic', 'mathetrainer');
+
+        $schoolforms = ['' => get_string('any', 'mathetrainer')];
+        foreach (['gymnasium', 'realschule', 'gesamtschule', 'sekundarschule', 'gemeinschaftsschule', 'hauptschule'] as $form) {
+            $schoolforms[$form] = get_string('schoolform_' . $form, 'mathetrainer');
+        }
+        $mform->addElement('select', 'schoolform', get_string('schoolform', 'mathetrainer'), $schoolforms);
+        $mform->addHelpButton('schoolform', 'schoolform', 'mathetrainer');
 
         $levels = [
             '' => get_string('any', 'mathetrainer'),
@@ -73,6 +88,18 @@ class mod_mathetrainer_mod_form extends moodleform_mod {
         }
         $mform->setType('competencyid', PARAM_ALPHANUMEXT);
         $mform->addHelpButton('competencyid', 'competencyid', 'mathetrainer');
+
+        // Gradebook: maximum grade / scale and how several rounds are combined.
+        $this->standard_grading_coursemodule_elements();
+        $mform->setDefault('grade', 100);
+        $methods = [];
+        foreach (\mod_mathetrainer\local\grading::methods() as $method => $key) {
+            $methods[$method] = get_string($key, 'mathetrainer');
+        }
+        $mform->addElement('select', 'grademethod', get_string('grademethod', 'mathetrainer'), $methods);
+        $mform->addHelpButton('grademethod', 'grademethod', 'mathetrainer');
+        $mform->setDefault('grademethod', \mod_mathetrainer\local\grading::METHOD_HIGHEST);
+        $mform->hideIf('grademethod', 'grade[modgrade_type]', 'eq', 'none');
 
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();

@@ -20,7 +20,16 @@ use mod_mathetrainer\local\fraction;
 use mod_mathetrainer\local\random;
 use mod_mathetrainer\local\signed_arithmetic;
 
+/**
+ * Generator for finding and correcting a sign error in a worked calculation.
+ */
 final class sign_error_analysis implements exercise_generator {
+    /**
+     * Generates a signed calculation shown with a typical wrong result.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
 

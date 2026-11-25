@@ -14,9 +14,13 @@ declare(strict_types=1);
 
 namespace mod_mathetrainer\generator;
 
+/**
+ * Registry of the exercise templates and their metadata.
+ */
 final class registry {
     /**
-     * @var array<string, array{class: class-string<exercise_generator>, topic: string, gradefrom: int, gradeto: int, levels: string[]}>
+     * @var array<string, array{class: class-string<exercise_generator>, topic: string,
+     *     gradefrom: int, gradeto: int, levels: string[]}> Templates by id
      */
     private const TEMPLATES = [
         'order_of_operations' => [
@@ -78,6 +82,8 @@ final class registry {
     ];
 
     /**
+     * Ids of all templates.
+     *
      * @return string[] all template ids
      */
     public static function templateids(): array {
@@ -85,6 +91,8 @@ final class registry {
     }
 
     /**
+     * Topics of all templates.
+     *
      * @return string[] distinct topics, sorted
      */
     public static function topics(): array {
@@ -93,10 +101,22 @@ final class registry {
         return $topics;
     }
 
+    /**
+     * Whether a template id is known.
+     *
+     * @param string $templateid Template id
+     * @return bool
+     */
     public static function exists(string $templateid): bool {
         return isset(self::TEMPLATES[$templateid]);
     }
 
+    /**
+     * Generator for a template id; throws for unknown ids.
+     *
+     * @param string $templateid Template id
+     * @return exercise_generator
+     */
     public static function get(string $templateid): exercise_generator {
         if (!self::exists($templateid)) {
             throw new \coding_exception('Unknown exercise template: ' . $templateid);
@@ -129,19 +149,22 @@ final class registry {
         }
 
         $filter = static function (bool $usetopic, bool $usegrade, bool $uselevel) use ($pool, $topic, $grade, $level): array {
-            return array_values(array_filter($pool, static function (string $id) use ($usetopic, $usegrade, $uselevel, $topic, $grade, $level): bool {
-                $meta = self::TEMPLATES[$id];
-                if ($usetopic && $topic !== null && $topic !== '' && $meta['topic'] !== $topic) {
-                    return false;
+            return array_values(array_filter(
+                $pool,
+                static function (string $id) use ($usetopic, $usegrade, $uselevel, $topic, $grade, $level): bool {
+                    $meta = self::TEMPLATES[$id];
+                    if ($usetopic && $topic !== null && $topic !== '' && $meta['topic'] !== $topic) {
+                        return false;
+                    }
+                    if ($usegrade && $grade !== null && ($grade < $meta['gradefrom'] || $grade > $meta['gradeto'])) {
+                        return false;
+                    }
+                    if ($uselevel && $level !== null && $level !== '' && !in_array($level, $meta['levels'], true)) {
+                        return false;
+                    }
+                    return true;
                 }
-                if ($usegrade && $grade !== null && ($grade < $meta['gradefrom'] || $grade > $meta['gradeto'])) {
-                    return false;
-                }
-                if ($uselevel && $level !== null && $level !== '' && !in_array($level, $meta['levels'], true)) {
-                    return false;
-                }
-                return true;
-            }));
+            ));
         };
 
         return $filter(true, true, true)

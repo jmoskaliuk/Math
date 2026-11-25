@@ -1,4 +1,13 @@
 <?php
+// This file is part of the Moodle plugin local_curriculum_math.
+
+/**
+ * Minimal YAML reader for curriculum packs.
+ *
+ * @package    local_curriculum_math
+ * @license    MIT
+ */
+
 declare(strict_types=1);
 
 namespace local_curriculum_math\importer;
@@ -18,9 +27,13 @@ use coding_exception;
 final class yaml_reader {
     /** @var array<int, array{indent: int, text: string, line: int}> */
     private array $lines = [];
+    /** @var int Index of the line currently being parsed */
     private int $pos = 0;
 
     /**
+     * Parses a YAML document into an array.
+     *
+     * @param string $yaml YAML source
      * @return array<string|int, mixed>
      */
     public function parse(string $yaml): array {
@@ -52,12 +65,24 @@ final class yaml_reader {
         return $result;
     }
 
+    /**
+     * Parses a block mapping or block sequence starting at the current line.
+     *
+     * @param int $indent Indentation of the block
+     * @return array
+     */
     private function parse_block(int $indent): array {
         return self::is_sequence_item($this->lines[$this->pos]['text'])
             ? $this->parse_sequence($indent)
             : $this->parse_mapping($indent);
     }
 
+    /**
+     * Parses "key: value" lines at the given indentation.
+     *
+     * @param int $indent Indentation of the mapping
+     * @return array
+     */
     private function parse_mapping(int $indent): array {
         $map = [];
         while ($this->pos < count($this->lines)) {
@@ -71,7 +96,13 @@ final class yaml_reader {
             if (self::is_sequence_item($line['text'])) {
                 break;
             }
-            if (!preg_match('/^("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\']|\'\')*\'|[^\s"\'#\[\]{},:][^:]*?)\s*:(?:\s+(.*))?$/', $line['text'], $m)) {
+            if (
+                !preg_match(
+                    '/^("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\']|\'\')*\'|[^\s"\'#\[\]{},:][^:]*?)\s*:(?:\s+(.*))?$/',
+                    $line['text'],
+                    $m
+                )
+            ) {
                 $this->fail('expected "key: value"');
             }
             $key = (string)self::scalar($m[1]);
@@ -98,6 +129,12 @@ final class yaml_reader {
         return $map;
     }
 
+    /**
+     * Parses "- item" lines at the given indentation.
+     *
+     * @param int $indent Indentation of the sequence
+     * @return array
+     */
     private function parse_sequence(int $indent): array {
         $list = [];
         while ($this->pos < count($this->lines)) {
@@ -128,6 +165,12 @@ final class yaml_reader {
         return $list;
     }
 
+    /**
+     * Converts a value written on the same line as its key or dash (scalar or flow sequence).
+     *
+     * @param string $value Raw value text
+     * @return mixed
+     */
     private function inline_value(string $value): mixed {
         $value = trim($value);
         if ($value === '|' || $value === '>' || preg_match('/^[|>][+-]?\d*$/', $value)) {
@@ -149,6 +192,9 @@ final class yaml_reader {
     }
 
     /**
+     * Splits the inside of a flow sequence into its raw item texts.
+     *
+     * @param string $inner Text between the brackets
      * @return string[]
      */
     private static function split_flow(string $inner): array {
@@ -159,6 +205,12 @@ final class yaml_reader {
         return $m[1];
     }
 
+    /**
+     * Converts a scalar (quoted string, null, boolean, integer, float or plain string).
+     *
+     * @param string $text Raw scalar text
+     * @return mixed
+     */
     private static function scalar(string $text): mixed {
         $text = trim($text);
         if ($text === '') {
@@ -196,6 +248,12 @@ final class yaml_reader {
         return $text;
     }
 
+    /**
+     * Whether a line is a sequence item ("-" or "- ...").
+     *
+     * @param string $text Line text without indentation
+     * @return bool
+     */
     private static function is_sequence_item(string $text): bool {
         return $text === '-' || str_starts_with($text, '- ');
     }
@@ -226,6 +284,12 @@ final class yaml_reader {
         return $line;
     }
 
+    /**
+     * Throws a parse error that names the current line.
+     *
+     * @param string $message Error message
+     * @return never
+     */
     private function fail(string $message): never {
         $line = $this->lines[$this->pos]['line'] ?? '?';
         throw new coding_exception('YAML: ' . $message . ' (line ' . $line . ')');

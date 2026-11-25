@@ -25,13 +25,19 @@ use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use mod_mathetrainer\local\attempt_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Privacy provider: describes, exports and deletes the attempts, responses and mastery values of users.
+ */
 class provider implements
     \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\plugin\provider,
-    \core_privacy\local\request\core_userlist_provider {
-
+    \core_privacy\local\request\core_userlist_provider,
+    \core_privacy\local\request\plugin\provider {
+    /**
+     * Describes the personal data stored by the plugin.
+     *
+     * @param collection $collection Collection to add the metadata to
+     * @return collection The updated collection
+     */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table('mathetrainer_attempts', [
             'userid' => 'privacy:metadata:attempts:userid',
@@ -58,6 +64,12 @@ class provider implements
         return $collection;
     }
 
+    /**
+     * Module contexts in which the user has attempts or mastery values.
+     *
+     * @param int $userid Id of the user
+     * @return contextlist
+     */
     public static function get_contexts_for_userid(int $userid): contextlist {
         $sql = "SELECT DISTINCT ctx.id
                   FROM {context} ctx
@@ -77,6 +89,11 @@ class provider implements
         return $contextlist;
     }
 
+    /**
+     * Adds the users with attempts or mastery values in a module context.
+     *
+     * @param userlist $userlist List to add the users to
+     */
     public static function get_users_in_context(userlist $userlist): void {
         $context = $userlist->get_context();
         if (!$context instanceof context_module) {
@@ -94,6 +111,11 @@ class provider implements
                 WHERE cm.id = :cmid", $params);
     }
 
+    /**
+     * Exports the attempts (with items and responses) and mastery values of the user.
+     *
+     * @param approved_contextlist $contextlist Approved contexts of the user
+     */
     public static function export_user_data(approved_contextlist $contextlist): void {
         global $DB;
         $userid = (int)$contextlist->get_user()->id;
@@ -105,8 +127,11 @@ class provider implements
             }
 
             $attempts = [];
-            $records = $DB->get_records('mathetrainer_attempts',
-                ['mathetrainerid' => $instanceid, 'userid' => $userid], 'attemptno ASC');
+            $records = $DB->get_records(
+                'mathetrainer_attempts',
+                ['mathetrainerid' => $instanceid, 'userid' => $userid],
+                'attemptno ASC'
+            );
             foreach ($records as $attempt) {
                 $items = [];
                 foreach ($DB->get_records('mathetrainer_items', ['attemptid' => $attempt->id], 'slot ASC') as $item) {
@@ -150,6 +175,11 @@ class provider implements
         }
     }
 
+    /**
+     * Deletes the data of all users in a module context.
+     *
+     * @param context $context Context to delete the data in
+     */
     public static function delete_data_for_all_users_in_context(context $context): void {
         global $DB;
         if ($instanceid = self::instance_id($context)) {
@@ -157,6 +187,11 @@ class provider implements
         }
     }
 
+    /**
+     * Deletes the data of one user in the approved contexts.
+     *
+     * @param approved_contextlist $contextlist Approved contexts of the user
+     */
     public static function delete_data_for_user(approved_contextlist $contextlist): void {
         global $DB;
         $userid = (int)$contextlist->get_user()->id;
@@ -167,6 +202,11 @@ class provider implements
         }
     }
 
+    /**
+     * Deletes the data of the approved users in a module context.
+     *
+     * @param approved_userlist $userlist Approved users and their context
+     */
     public static function delete_data_for_users(approved_userlist $userlist): void {
         global $DB;
         if (!$instanceid = self::instance_id($userlist->get_context())) {

@@ -1,5 +1,15 @@
 <?php
-// CLI importer for local_curriculum_math packs.
+// This file is part of the Moodle plugin local_curriculum_math.
+
+/**
+ * CLI importer for local_curriculum_math packs.
+ *
+ * Imports one pack (--file) or all packs in a directory tree (--dir), KMK packs first.
+ *
+ * @package    local_curriculum_math
+ * @license    MIT
+ */
+
 define('CLI_SCRIPT', true);
 
 require(__DIR__ . '/../../../config.php');

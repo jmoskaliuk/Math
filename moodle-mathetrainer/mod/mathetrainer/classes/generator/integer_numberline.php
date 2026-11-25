@@ -20,9 +20,19 @@ namespace mod_mathetrainer\generator;
 
 use mod_mathetrainer\local\random;
 
+/**
+ * Generator for reading off an integer on a number line.
+ */
 final class integer_numberline implements exercise_generator {
+    /** @var int Number of intervals on the number line */
     private const DIVISIONS = 10;
 
+    /**
+     * Generates a number line with zero, one other labelled tick and a marked integer.
+     *
+     * @param int $seed Seed for the random number generator
+     * @return array Exercise with payload and expected answer
+     */
     public function generate(int $seed): array {
         $rng = new random($seed);
         $step = $rng->pick([1, 1, 2, 5, 10]);

@@ -1,5 +1,7 @@
 # Entwurf: Kurzlabels und Klassenzuordnungen sind fachlich gegen den
 # Bildungsplan BW zu prüfen. Keine Originaltexte des Bildungsplans übernehmen.
+# Leitidee bei Gleichungen: "Strukturen und funktionaler Zusammenhang" (Algebra und Funktionen),
+# plausibel laut Sekundärquellen; Abgleich mit den KMK-Bildungsstandards 2022 (ESA/MSA) steht aus.
 framework:
   id: "BW-MATH-SI"
   country: "DE"

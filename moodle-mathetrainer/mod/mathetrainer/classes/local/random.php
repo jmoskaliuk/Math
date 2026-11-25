@@ -15,11 +15,21 @@ declare(strict_types=1);
 
 namespace mod_mathetrainer\local;
 
+/**
+ * Deterministic xorshift32 random number generator.
+ */
 final class random {
+    /** @var int Mask for 32 bit unsigned values */
     private const MASK = 0xFFFFFFFF;
 
+    /** @var int Current generator state, never 0 */
     private int $state;
 
+    /**
+     * Creates a generator for a seed.
+     *
+     * @param int $seed Seed; the same seed gives the same sequence
+     */
     public function __construct(int $seed) {
         $state = $seed & self::MASK;
         // Xorshift must never be in state 0.
@@ -65,9 +75,8 @@ final class random {
     /**
      * Random element of a non-empty list.
      *
-     * @template T
-     * @param array<int, T> $items
-     * @return T
+     * @param array $items non-empty list
+     * @return mixed one of the elements of $items
      */
     public function pick(array $items): mixed {
         $items = array_values($items);
