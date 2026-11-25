@@ -4,12 +4,12 @@
 
 | Tabelle | Inhalt | Befüllt durch |
 |---|---|---|
-| `curriculum_framework` | Ein Rahmen je Pack (z. B. `NRW-MATH-SI`, Version `draft-0.2`), Land, Stufe | Import (Upsert über ID + Version) |
-| `curriculum_competency` | Kompetenzen mit Kurzlabel für Lehrkraft und Lernende, Klassen, Thema, KMK-Leitidee, Prozesskompetenzen, AFB | Import (Upsert) |
-| `curriculum_mapping` | Zuordnung Landeskompetenz → KMK-Kompetenz (`kmk.maps_to`) | Import (ersetzt je Kompetenz) |
-| `exercise_template` | Aufgabentypen, die in Packs genannt werden (`exercise_generators`) | Import |
-| `exercise_competency_link` | Aufgabentyp ↔ Kompetenz | Import |
-| `curriculum_source`, `curriculum_node` | Vorgesehen für Quellenverweise und Gliederungsknoten | noch nicht genutzt |
+| `local_curriculum_math_framework` | Ein Rahmen je Pack (z. B. `NRW-MATH-SI`, Version `draft-0.2`), Land, Stufe | Import (Upsert über ID + Version) |
+| `local_curriculum_math_competency` | Kompetenzen mit Kurzlabel für Lehrkraft und Lernende, Klassen, Thema, KMK-Leitidee, Prozesskompetenzen, AFB | Import (Upsert) |
+| `local_curriculum_math_mapping` | Zuordnung Landeskompetenz → KMK-Kompetenz (`kmk.maps_to`) | Import (ersetzt je Kompetenz) |
+| `local_curriculum_math_template` | Aufgabentypen, die in Packs genannt werden (`exercise_generators`) | Import |
+| `local_curriculum_math_templatelink` | Aufgabentyp ↔ Kompetenz | Import |
+| `local_curriculum_math_source`, `local_curriculum_math_node` | Vorgesehen für Quellenverweise und Gliederungsknoten | noch nicht genutzt |
 
 ## mod_mathetrainer
 
@@ -31,3 +31,6 @@ Generator alte Durchgänge nicht verändern.
 - `mod_mathetrainer` 2026112500: Felder `grade` und `grademethod`; bestehende Aktivitäten erhalten ihre
   Gradebook-Spalte über eine Hintergrundaufgabe (`\mod_mathetrainer\task\update_all_grades`), weil das
   Gradebook während eines Upgrades nicht geändert werden darf.
+- `local_curriculum_math` 2026112600: Tabellen nach Moodle-Konvention mit Pluginnamen als Präfix
+  (`local_curriculum_math_*`); bestehende Tabellen werden beim Upgrade umbenannt, Daten bleiben erhalten.
+  Die längeren Tabellennamen setzen Moodle 4.5 voraus (ältere Versionen erlauben nur 28 Zeichen).

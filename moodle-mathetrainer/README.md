@@ -33,7 +33,7 @@ Siehe Architektur-Dokumentation unter `docs/architecture.md`.
 
 ## Status
 
-Version 0.5.0 (Alpha). **Getestet in Moodle 4.5 mit PostgreSQL**: Installation, Upgrade, Import, Durchgang
+Version 0.5.0 (Alpha), **benötigt Moodle 4.5 (LTS) oder neuer**. **Getestet in Moodle 4.5 mit PostgreSQL**: Installation, Upgrade, Import, Durchgang
 im Browser, Gradebook, Bericht, Backup/Restore, Privacy API (64 PHPUnit-Tests), Moodle-Coding-Standard ohne Befund.
 
 - Lehrkraft legt Bundesland, Schulform, Klasse, Thema, AFB und optional eine Kompetenz fest
@@ -83,7 +83,7 @@ Zuordnung zur KMK-Kompetenz (`kmk.maps_to`, gespeichert in `curriculum_mapping`)
 ## Tests und CI
 
 GitHub Actions (`.github/workflows/moodle-plugin-ci.yml`) prüft beide Plugins mit `moodle-plugin-ci`
-in Moodle 4.1 und 4.5: PHP-Lint, Coding Standard (`phpcs.xml`), PHPDoc, Validierung, Savepoints, PHPUnit.
+in Moodle 4.5 und 5.3: PHP-Lint, Coding Standard (`phpcs.xml`), PHPDoc, Validierung, Savepoints, PHPUnit.
 
 
 PHPUnit-Tests liegen unter `mod/mathetrainer/tests/` (Moodle-Standard):

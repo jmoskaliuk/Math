@@ -37,7 +37,7 @@ final class import_service {
      * Imports one pack file (framework, competencies, template links and KMK mappings) in a transaction.
      *
      * @param string $filepath Path to the pack file
-     * @return int Id of the curriculum_framework record
+     * @return int Id of the local_curriculum_math_framework record
      */
     public function import_path(string $filepath): int {
         global $DB;
@@ -48,7 +48,7 @@ final class import_service {
         $framework = $pack['framework'];
         $transaction = $DB->start_delegated_transaction();
 
-        $record = $DB->get_record('curriculum_framework', [
+        $record = $DB->get_record('local_curriculum_math_framework', [
             'frameworkid' => (string)$framework['id'],
             'versiontag' => (string)$framework['version'],
         ]) ?: new stdClass();
@@ -60,12 +60,12 @@ final class import_service {
         $record->versiontag = (string)$framework['version'];
 
         if (!empty($record->id)) {
-            $DB->update_record('curriculum_framework', $record);
+            $DB->update_record('local_curriculum_math_framework', $record);
             $frameworkfk = (int)$record->id;
         } else {
             $record->status = 'draft';
             $record->timecreated = time();
-            $frameworkfk = (int)$DB->insert_record('curriculum_framework', $record);
+            $frameworkfk = (int)$DB->insert_record('local_curriculum_math_framework', $record);
         }
 
         if (!empty($pack['competencies']) && is_array($pack['competencies'])) {
@@ -76,7 +76,7 @@ final class import_service {
                 // KMK packs keep leitidee/process/requirement_levels at top level, state packs under "kmk".
                 $kmk = is_array($competency['kmk'] ?? null) ? $competency['kmk'] : $competency;
 
-                $comp = $DB->get_record('curriculum_competency', [
+                $comp = $DB->get_record('local_curriculum_math_competency', [
                     'frameworkfk' => $frameworkfk,
                     'competencyid' => (string)$competency['id'],
                 ]) ?: new stdClass();
@@ -93,9 +93,9 @@ final class import_service {
                 $comp->requirementjson = json_encode($kmk['requirement_levels'] ?? [], JSON_UNESCAPED_UNICODE);
 
                 if (!empty($comp->id)) {
-                    $DB->update_record('curriculum_competency', $comp);
+                    $DB->update_record('local_curriculum_math_competency', $comp);
                 } else {
-                    $comp->id = $DB->insert_record('curriculum_competency', $comp);
+                    $comp->id = $DB->insert_record('local_curriculum_math_competency', $comp);
                 }
 
                 $generators = is_array($competency['exercise_generators'] ?? null) ? $competency['exercise_generators'] : [];
@@ -125,7 +125,7 @@ final class import_service {
     private function replace_mappings(string $fromframework, string $fromcompetency, string $toframework, array $targets): void {
         global $DB;
 
-        $DB->delete_records('curriculum_mapping', [
+        $DB->delete_records('local_curriculum_math_mapping', [
             'fromframework' => $fromframework,
             'fromcompetency' => $fromcompetency,
             'toframework' => $toframework,
@@ -134,7 +134,7 @@ final class import_service {
             if (trim($target) === '') {
                 continue;
             }
-            $DB->insert_record('curriculum_mapping', (object)[
+            $DB->insert_record('local_curriculum_math_mapping', (object)[
                 'fromframework' => $fromframework,
                 'fromcompetency' => $fromcompetency,
                 'toframework' => $toframework,
@@ -159,7 +159,7 @@ final class import_service {
             if ($templateid === '' || !preg_match('/^[a-z0-9_]+$/', $templateid)) {
                 continue;
             }
-            $template = $DB->get_record('exercise_template', ['templateid' => $templateid]);
+            $template = $DB->get_record('local_curriculum_math_template', ['templateid' => $templateid]);
             if (!$template) {
                 $template = (object)[
                     'templateid' => $templateid,
@@ -171,11 +171,11 @@ final class import_service {
                     'validatorclass' => '',
                     'active' => 1,
                 ];
-                $template->id = $DB->insert_record('exercise_template', $template);
+                $template->id = $DB->insert_record('local_curriculum_math_template', $template);
             }
             $link = ['templateid' => (int)$template->id, 'competencyid' => $competencyfk];
-            if (!$DB->record_exists('exercise_competency_link', $link)) {
-                $DB->insert_record('exercise_competency_link', (object)$link);
+            if (!$DB->record_exists('local_curriculum_math_templatelink', $link)) {
+                $DB->insert_record('local_curriculum_math_templatelink', (object)$link);
             }
         }
     }

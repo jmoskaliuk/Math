@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/curriculum_math/db" VERSION="2026043001" COMMENT="XMLDB file for local_curriculum_math"
+<XMLDB PATH="local/curriculum_math/db" VERSION="2026112600" COMMENT="XMLDB file for local_curriculum_math"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="curriculum_source" COMMENT="Source metadata for curriculum imports">
+    <TABLE NAME="local_curriculum_math_source" COMMENT="Source metadata for curriculum imports">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="sourcekey" TYPE="char" LENGTH="100" NOTNULL="true"/>
@@ -17,7 +17,7 @@
       <INDEXES><INDEX NAME="sourcekey_uix" UNIQUE="true" FIELDS="sourcekey"/></INDEXES>
     </TABLE>
 
-    <TABLE NAME="curriculum_framework" COMMENT="Framework header and version">
+    <TABLE NAME="local_curriculum_math_framework" COMMENT="Framework header and version">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="sourceid" TYPE="int" LENGTH="10" NOTNULL="false"/>
@@ -32,14 +32,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="framework_source_fk" TYPE="foreign" FIELDS="sourceid" REFTABLE="curriculum_source" REFFIELDS="id"/>
+        <KEY NAME="framework_source_fk" TYPE="foreign" FIELDS="sourceid" REFTABLE="local_curriculum_math_source" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="framework_unique_uix" UNIQUE="true" FIELDS="frameworkid,versiontag"/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="curriculum_node" COMMENT="Hierarchical curriculum nodes">
+    <TABLE NAME="local_curriculum_math_node" COMMENT="Hierarchical curriculum nodes">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="frameworkfk" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
@@ -51,14 +51,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="node_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="curriculum_framework" REFFIELDS="id"/>
+        <KEY NAME="node_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="local_curriculum_math_framework" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="node_unique_uix" UNIQUE="true" FIELDS="frameworkfk,nodeid"/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="curriculum_competency" COMMENT="Competency definitions">
+    <TABLE NAME="local_curriculum_math_competency" COMMENT="Competency definitions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="frameworkfk" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
@@ -75,14 +75,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="comp_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="curriculum_framework" REFFIELDS="id"/>
+        <KEY NAME="comp_framework_fk" TYPE="foreign" FIELDS="frameworkfk" REFTABLE="local_curriculum_math_framework" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="comp_unique_uix" UNIQUE="true" FIELDS="frameworkfk,competencyid"/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="curriculum_mapping" COMMENT="Mapping across frameworks">
+    <TABLE NAME="local_curriculum_math_mapping" COMMENT="Mapping across frameworks">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="fromframework" TYPE="char" LENGTH="100" NOTNULL="true"/>
@@ -99,7 +99,7 @@
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="exercise_template" COMMENT="Exercise templates">
+    <TABLE NAME="local_curriculum_math_template" COMMENT="Exercise templates">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="templateid" TYPE="char" LENGTH="100" NOTNULL="true"/>
@@ -115,7 +115,7 @@
       <INDEXES><INDEX NAME="templateid_uix" UNIQUE="true" FIELDS="templateid"/></INDEXES>
     </TABLE>
 
-    <TABLE NAME="exercise_competency_link" COMMENT="Template to competency relation">
+    <TABLE NAME="local_curriculum_math_templatelink" COMMENT="Template to competency relation">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="templateid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
@@ -123,8 +123,8 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="link_template_fk" TYPE="foreign" FIELDS="templateid" REFTABLE="exercise_template" REFFIELDS="id"/>
-        <KEY NAME="link_comp_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="curriculum_competency" REFFIELDS="id"/>
+        <KEY NAME="link_template_fk" TYPE="foreign" FIELDS="templateid" REFTABLE="local_curriculum_math_template" REFFIELDS="id"/>
+        <KEY NAME="link_comp_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="local_curriculum_math_competency" REFFIELDS="id"/>
       </KEYS>
       <INDEXES><INDEX NAME="link_unique_uix" UNIQUE="true" FIELDS="templateid,competencyid"/></INDEXES>
     </TABLE>

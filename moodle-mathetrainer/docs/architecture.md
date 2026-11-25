@@ -44,5 +44,5 @@ Die Aktivität funktioniert auch ohne das Lehrplan-Plugin (Auswahl nach Thema/Kl
 ## Qualitätssicherung
 - PHPUnit: reine Tests (Generatoren, Validator, Bewertung, Empfehlungen, YAML) und
   Datenbanktests (Durchgang, Gradebook, Bericht, Privacy, Backup/Restore)
-- GitHub Actions mit `moodle-plugin-ci` (Moodle 4.1 und 4.5, PostgreSQL): Lint, Coding Standard,
+- GitHub Actions mit `moodle-plugin-ci` (Moodle 4.5 und 5.3, PostgreSQL): Lint, Coding Standard,
   Validierung, Savepoints, PHPUnit
