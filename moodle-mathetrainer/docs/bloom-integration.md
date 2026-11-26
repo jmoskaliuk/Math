@@ -1,6 +1,6 @@
 # Konzept: Mathetrainer × Bloom
 
-Stand: November 2026 · Status: Konzept mit lauffähigem Paket-Generator (Prototyp)
+Stand: November 2026 · Status: Paket-Generator fertig, Pilot in Bloom angelegt (Weg A)
 
 ## Idee in einem Satz
 
@@ -124,12 +124,37 @@ an **C** ableiten. B ist ein guter Zwischenschritt, falls Bloom ohnehin einen Pr
 `slides` kann direkt an Bloom (`create_slides`) übergeben werden. Bilder: `image.media = "asset:<key>"`
 wird beim Anlegen durch die Kennung des hochgeladenen Bildes ersetzt.
 
+## Pilot (26.11.2026)
+
+Über Weg A (Bloom-Schnittstelle) wurden in der Organisation „eLeDia GmbH“ zwei Projekte angelegt, beide im Status
+Entwurf:
+
+| Projekt | Folien | Inhalt |
+|---|---|---|
+| Brüche am Zahlenstrahl und vergleichen (Klasse 6) | 10 | 4 × Bruch am Zahlenstrahl (Eingabe, mit Grafik), 4 × Brüche vergleichen (MC) |
+| Rechnen mit negativen Zahlen (Klasse 7) | 11 | je 3 × Zahlenstrahl, Rechnen mit rationalen Zahlen, Fehler finden (gemischt Eingabe/MC) |
+
+Ergebnisse:
+
+- **Bloom-Prüfung: 0 Fehler, 0 Hinweise** (nach den unten genannten Korrekturen).
+- **Zusatzfelder bleiben erhalten**: `mathetrainer.templateid` und `seed` stehen nach dem Anlegen weiter an der
+  Folie. Damit ist „Variante neu würfeln“ technisch möglich (offene Frage 1 beantwortet).
+- **SVG-Grafiken** nimmt Bloom direkt an (offene Frage 6 beantwortet). `currentColor` wurde durch eine feste Farbe
+  ersetzt, damit die Grafik in jedem Bloom-Design gleich aussieht.
+- **Alternativtexte** der Zahlenstrahle beschreiben Einteilung, Beschriftung und Lage des Punkts, damit die Aufgabe
+  auch mit Screenreader lösbar ist.
+- Bloom verlangt eine Kennung (`name`) für jede Eingabefolie und prüft, ob alle Lernziele und Kernaussagen von
+  Folien abgedeckt werden. Beides erzeugt der Paket-Generator jetzt automatisch.
+
+Noch zu prüfen im Pilot: Darstellung im Bloom-Player, SCORM-Export in einen Moodle-Kurs, Rückmeldung von
+Lehrkräften zum Anpassen im Editor, Vergleich der Eingabe (z. B. ob „ 2/3“ mit Leerzeichen akzeptiert wird).
+
 ## Offene Fragen und Entscheidungen
 
 1. **Statisch vs. dynamisch.** Ein Bloom-Paket hat feste Zahlen. Das ist für gestaltete Lerneinheiten
-   richtig; für „unendlich üben“ bleibt die Mathetrainer-Aktivität. Zu klären: Soll Bloom eine Folie
-   „neu würfeln“ können? Dafür trägt jede Folie `mathetrainer.templateid` und `seed`. Zu prüfen ist,
-   ob Bloom solche Zusatzfelder beim Bearbeiten erhält.
+   richtig; für „unendlich üben“ bleibt die Mathetrainer-Aktivität. Soll Bloom eine Folie „neu würfeln“
+   können? Dafür trägt jede Folie `mathetrainer.templateid` und `seed`; der Pilot zeigt, dass Bloom diese
+   Felder erhält.
 2. **Rückfluss der Fehlerdiagnosen.** Über SCORM kommt in Moodle nur die Gesamtnote sicher an. Damit
    der Mathetrainer-Bericht auch Bloom-Pakete auswertet, müsste Bloom je Frage die gewählte Option in
    die SCORM-Interaktionen schreiben (`cmi.interactions`). Der Mathetrainer könnte sie dann auslesen.
@@ -141,13 +166,12 @@ wird beim Anlegen durch die Kennung des hochgeladenen Bildes ersetzt.
    in Moodle. Das passt zu den Datenschutz-Grundsätzen des Projekts.
 5. **Tarif und Rechte.** Im Free-Tarif von Bloom sind höchstens 3 eigene Projekte möglich; Pakete
    entstehen in der Organisation der Lehrkraft (Schreibrecht nötig).
-6. **Zahlenstrahl-Bilder.** Die SVG-Grafiken werden hochgeladen. Ob Bloom SVG direkt annimmt oder ein
-   PNG braucht, ist im Pilot zu klären.
+6. **Zahlenstrahl-Bilder.** Bloom nimmt SVG direkt an (im Pilot geprüft).
 
 ## Nächste Schritte
 
-1. Pilot: 2–3 Pakete (z. B. „Brüche vergleichen, Kl. 6“, „Rechnen mit negativen Zahlen, Kl. 7“) über
-   Weg A in Bloom anlegen, von einer Lehrkraft anpassen lassen, als SCORM in Moodle testen.
+1. Pilot fortsetzen: die beiden angelegten Pakete von einer Lehrkraft anpassen lassen und als SCORM in
+   Moodle testen.
 2. Mit dem Bloom-Team klären: Zusatzfelder an Folien, SCORM-Interaktionen, API für Weg C.
 3. Danach: Button „In Bloom öffnen“ im Mathetrainer (Weg C) und Auswertung der Bloom-Ergebnisse im
    Mathetrainer-Bericht.

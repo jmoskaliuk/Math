@@ -107,12 +107,21 @@ final class package_builder {
                 $key = 'numberline-' . $n;
                 $assets[$key] = [
                     'type' => 'image/svg+xml',
-                    'content' => numberline_svg::render($exercise['payload']['numberline'], $this->s('numberline_alt')),
+                    // Fixed colour instead of currentColor: the image must look the same in every Bloom design.
+                    'content' => str_replace(
+                        'currentColor',
+                        '#1f2937',
+                        numberline_svg::render($exercise['payload']['numberline'], $this->s('numberline_alt'))
+                    ),
                 ];
                 $slide['image'] = ['media' => 'asset:' . $key, 'alt' => $this->s('numberline_alt')];
             }
             $slide['bloom'] = self::TAXONOMY[$templateid] ?? 'anwenden';
             $slide['chapter'] = $this->s('template_' . $templateid);
+            // Link the slide to the goal and key point of its exercise type (Bloom checks coverage).
+            $index = array_search($templateid, $templateids, true) + 1;
+            $slide['goals'] = ['L' . $index];
+            $slide['keyPoints'] = ['K' . $index];
             // Traceability: which generator and seed produced this slide (for regenerating variants).
             $slide['mathetrainer'] = ['templateid' => $templateid, 'seed' => $itemseed];
             $slides[] = $slide;
@@ -121,6 +130,7 @@ final class package_builder {
         $slides[] = [
             'type' => 'result',
             'title' => $this->s('bloom_result_title'),
+            'chapter' => $this->s('bloom_chapter_end'),
             'passText' => $this->s('bloom_result_pass'),
             'failText' => $this->s('bloom_result_fail'),
         ];
@@ -178,6 +188,8 @@ final class package_builder {
             'points' => $points,
             'boxes' => [['kind' => 'tip', 'text' => $this->s('bloom_intro_tip')]],
             'callout' => '',
+            'chapter' => $this->s('bloom_chapter_start'),
+            'keyPoints' => array_map(static fn(int $i): string => 'K' . ($i + 1), array_keys($templateids)),
         ];
     }
 
@@ -225,6 +237,8 @@ final class package_builder {
         return [
             'type' => 'input',
             'title' => $this->s('exerciseno', $n),
+            // Bloom requires an identifier for every input (used for the LMS data).
+            'name' => 'aufgabe_' . $n,
             'mode' => 'short',
             'prompt' => $this->prompt($exercise),
             'answers' => self::answer_variants($exercise),

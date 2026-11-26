@@ -53,11 +53,29 @@ final class bloom_package_builder_test extends \basic_testcase {
                     }
                 } else {
                     $this->assertSame('input', $slide['type']);
+                    $this->assertMatchesRegularExpression('/^aufgabe_\d+$/', $slide['name'], 'Bloom needs an input name.');
                     $this->assertNotEmpty($slide['answers']);
                     $this->assertTrue($slide['scored']);
                 }
             }
         }
+    }
+
+    /**
+     * Every exercise slide covers a goal and a key point of the concept (Bloom's coverage check).
+     */
+    public function test_goal_and_keypoint_coverage(): void {
+        $package = $this->builder()->build(['integer_numberline', 'rational_addition', 'sign_error_analysis'], 9, 1);
+        $goals = array_column($package['concept']['goals'], 'id');
+        $keypoints = array_column($package['concept']['keyPoints'], 'id');
+        $covered = [];
+        foreach (array_slice($package['slides'], 1, -1) as $slide) {
+            $this->assertContains($slide['goals'][0], $goals);
+            $this->assertContains($slide['keyPoints'][0], $keypoints);
+            $covered[$slide['goals'][0]] = true;
+        }
+        $this->assertCount(count($goals), $covered, 'Every goal is covered by at least one slide.');
+        $this->assertSame($keypoints, $package['slides'][0]['keyPoints']);
     }
 
     public function test_mc_distractors_are_misconceptions(): void {
