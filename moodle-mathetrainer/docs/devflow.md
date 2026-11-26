@@ -92,22 +92,22 @@ Commit-Format:
 
 ## 10) MVP-Umsetzung in Inkrementen
 
-### Inkrement A – Fundament
+### Inkrement A – Fundament ✅
 - Plugin-Struktur
 - XMLDB-Schema
 - KMK/NRW/BW Beispielpacks
 
-### Inkrement B – Curriculum nutzbar
+### Inkrement B – Curriculum nutzbar ✅
 - YAML/JSON-Importer
 - Framework/Competency-Mapping Services
 - Filter-Queries
 
-### Inkrement C – Lernen nutzbar
+### Inkrement C – Lernen nutzbar ✅
 - 3–5 deterministische Generatoren (Kl. 5–7)
 - Antwortprüfung + Feedbackbausteine
 - Versuchsspeicherung
 
-### Inkrement D – Lehrkraftnutzen
+### Inkrement D – Lehrkraftnutzen ✅
 - Kompetenzreport je Schüler/Gruppe
 - Fehlertypanalyse
 - Wiederholungsempfehlungen

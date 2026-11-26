@@ -1,10 +1,17 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of the Moodle plugin mod_mathetrainer.
+
+/**
+ * Version information for mod_mathetrainer.
+ *
+ * @package    mod_mathetrainer
+ * @license    MIT
+ */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_mathetrainer';
-$plugin->version = 2026043001;
-$plugin->requires = 2022041900;
+$plugin->version = 2026112501;
+$plugin->requires = 2024100700; // Moodle 4.5 (LTS).
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.1.0';
+$plugin->release = '0.5.0';

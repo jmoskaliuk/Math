@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  Moodle coding standard for both plugins.
+  The GPL boilerplate, GPL license tag and copyright tag rules are excluded because this
+  repository is licensed under MIT (see LICENSE). If the plugins are moved to
+  GPL v3 (required for the Moodle plugins directory) and a copyright holder
+  is defined, remove the excludes.
+-->
+<ruleset name="mathetrainer">
+    <rule ref="moodle">
+        <exclude name="moodle.Files.BoilerplateComment"/>
+        <exclude name="moodle.Commenting.FileExpectedTags.LicenseTagInvalid"/>
+        <exclude name="moodle.Commenting.FileExpectedTags.CopyrightTagMissing"/>
+    </rule>
+</ruleset>

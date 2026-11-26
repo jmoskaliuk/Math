@@ -1,36 +1,48 @@
 # Architektur
 
-## Plugin-Trennung
+## Plugins
 
-## 1) `mod_mathetrainer` (Activity Plugin)
-Verantwortlich für:
-- Aufgabengenerierung aus Templates
-- Antwortprüfung und Feedback
-- Versuche, Items, Responses, Mastery-Tracking
-- Lehrkraftansichten und Kompetenzberichte
+### `mod_mathetrainer` (Aktivität)
+- **Generatoren** (`classes/generator/`): ein Klasse je Aufgabentyp, rein (keine Datenbank, keine
+  Sprachstrings), deterministisch über einen Seed. Liefern Aufgabe (`payload`) und Erwartung
+  (`expected`: Lösung + typische Fehlantworten mit Fehlerkategorie).
+- **Registry** (`generator/registry.php`): Aufgabentypen mit Thema, Klassen, AFB; Auswahl mit
+  schrittweiser Lockerung, damit eine Aktivität nie leer ist.
+- **Validator** (`validator/answer_validator.php`): prüft Eingaben exakt (Brüche, Dezimalzahlen,
+  typografisches Minus), erkennt Fehlerkategorien, prüft geforderte Schreibweise.
+- **Durchgänge** (`local/attempt_manager.php`): Durchgang starten, Aufgaben erzeugen, abgeben, Lernstand.
+- **Bewertung** (`local/grading.php`, `lib.php`): Gradebook mit Punkten oder Skala, Methode
+  bester/letzter/erster/Durchschnitt.
+- **Bericht** (`report.php`, `local/report_data.php`, `local/recommender.php`): Ergebnisse je
+  Lernende und Aufgabentyp, typische Fehler, regelbasierte Empfehlungen, Download.
+- **Bloom-Pakete** (`classes/bloom/package_builder.php`, `cli/bloom_package.php`): siehe
+  `bloom-integration.md`.
+- Moodle-Integration: Backup/Restore, Privacy API, Kurs-Reset, Events, Gruppen im Bericht.
 
-## 2) `local_curriculum_math` (Local Plugin)
-Verantwortlich für:
-- Verwaltung von Frameworks (KMK, NRW, BW)
-- Knoten/Kompetenzen/Mappings
-- Curriculum-Versionierung
-- Import aus YAML/JSON
-- Verknüpfung von Kompetenzen mit Aufgabentemplates
+### `local_curriculum_math` (Lehrplanmodell)
+- Import von Curriculum-Packs (YAML/JSON, eigener YAML-Leser ohne `ext-yaml`)
+- Kompetenzen, Zuordnung zu KMK, Verknüpfung mit Aufgabentypen
+- Abfragen für die Aktivität (`mapper/competency_query_service.php`)
 
-## Datenfluss (vereinfacht)
-1. Lehrkraft konfiguriert Aktivität (`mod_mathetrainer`) mit Filtern.
-2. Aktivität fragt `local_curriculum_math` nach passenden Kompetenzen/Templates.
-3. Generator erzeugt deterministische Aufgabeninstanzen.
-4. Lernende bearbeiten Aufgaben; Antworten werden geprüft.
-5. Ergebnisse werden auf Kompetenzebene aggregiert.
-6. Lehrkräfte sehen Fortschritt nach Kompetenz/AFB/Topic.
+Die Aktivität funktioniert auch ohne das Lehrplan-Plugin (Auswahl nach Thema/Klasse/AFB).
+
+## Datenfluss
+
+1. Lehrkraft konfiguriert die Aktivität: Kompetenz aus dem Lehrplan **oder** Thema, Klasse, AFB.
+2. Die Aktivität ermittelt die Aufgabentypen (Kompetenz → `exercise_generators`, sonst Registry).
+3. Generatoren erzeugen 5 Aufgaben je Durchgang (zufälliger Seed, Aufgabe wird gespeichert).
+4. Lernende antworten; der Validator bewertet und bestimmt Fehlerkategorien.
+5. Ergebnis → Gradebook, Lernstand je Kompetenz, Empfehlung für die Lernenden.
+6. Lehrkraft sieht Bericht je Lernende und Aufgabentyp und lädt ihn bei Bedarf herunter.
+7. Optional: Lehrkraft erzeugt aus denselben Aufgabentypen ein Bloom-Lernpaket.
 
 ## Datenschutz
-- Keine personenbezogenen Schülerdaten an externe KI.
-- KI-Nutzung optional, nur für erklärende Texte.
-- Aufgabenkernlogik lokal, deterministisch, auditierbar.
+- Keine personenbezogenen Daten an externe Dienste (auch nicht an Bloom: nur Aufgaben).
+- Keine KI in der Bewertung; alles lokal, deterministisch, nachvollziehbar.
+- Privacy API: Export und Löschung für Durchgänge, Antworten, Lernstand.
 
-## Erweiterbarkeit
-- Neue Länderprofile über zusätzliche Curriculum-Packs
-- Neue Übungsarten über Generator/Validator-Klassen
-- Weitere Stufen und Jahrgänge über Framework-Versionen
+## Qualitätssicherung
+- PHPUnit: reine Tests (Generatoren, Validator, Bewertung, Empfehlungen, YAML) und
+  Datenbanktests (Durchgang, Gradebook, Bericht, Privacy, Backup/Restore)
+- GitHub Actions mit `moodle-plugin-ci` (Moodle 4.5 und 5.3, PostgreSQL): Lint, Coding Standard,
+  Validierung, Savepoints, PHPUnit
